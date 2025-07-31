@@ -8,17 +8,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { ModeToggle } from "../mode-toggle";
 
 function TopBar() {
   return (
-    <header className="flex p-2 px-8 bg-neutral-100 justify-end">
+    <header className="flex p-2 px-8 justify-end">
       <div className="flex items-center gap-2">
         <Button variant="outline" size="icon" className="px-2">
           <Bell />
         </Button>
         <Button variant="outline" size="icon" className="px-2">
-          <Mail/>
+          <Mail />
         </Button>
+        <ModeToggle />
 
         <Select>
           <SelectTrigger className="flex gap-2 px-3 py-1 border rounded-md focus:outline-none">

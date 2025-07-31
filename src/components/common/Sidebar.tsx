@@ -17,11 +17,12 @@ import {
 } from "@/components/ui/tooltip";
 import { BiArrowBack, BiArrowFromLeft } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/" },
-  { icon: BookIcon, label: "Book Lists", path: "/books" },
-  { icon: Tag, label: "Category lists", path: "/categories" },
+  { icon: BookIcon, label: "Book", path: "/books" },
+  { icon: Tag, label: "Category", path: "/categories" },
 ];
 
 const settingItems = [
@@ -32,6 +33,9 @@ const settingItems = [
 
 function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(true);
+  const isMobile = useIsMobile();
+
+  if (isMobile) return null;
 
   return (
     <aside
@@ -42,41 +46,51 @@ function Sidebar() {
     >
       <div className="flex items-center justify-between p-4">
         <h1
-          className={clsx("text-2xl pt-4 pl-5 pr-32", !isExpanded && "hidden")}
+          className={clsx(
+            "text-2xl pt-4 pl-5 pr-32 font-bold",
+            !isExpanded && "hidden"
+          )}
         >
-          BooksList.
+          Books.
         </h1>
+        {!isExpanded ? (
+          <h1 className="font-bold text-2xl pt-4 pl-8 pr-32">B.</h1>
+        ) : null}
         <Button
           size="icon"
           variant="secondary"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="absolute top-4 -right-6 w-10 h-10"
+          className="absolute top-4 -right-6 w-10 h-10 shadow-md"
         >
           {isExpanded ? <BiArrowBack /> : <BiArrowFromLeft />}
         </Button>
       </div>
 
       <nav className="px-8 space-y-2">
-        {navItems.map(({ icon: Icon, label, path }) => (
-          <TooltipProvider key={label}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link to={path}>
-                  <Button
-                    variant="ghost"
-                    className="w-full h-12 justify-start gap-4 font-normal"
-                  >
-                    <Icon size={24} />
-                    {isExpanded && label}
-                  </Button>
-                </Link>
-              </TooltipTrigger>
-              {!isExpanded && (
-                <TooltipContent side="right">{label}</TooltipContent>
-              )}
-            </Tooltip>
-          </TooltipProvider>
-        ))}
+        {navItems.map(({ icon: Icon, label, path }) => {
+          return (
+            <TooltipProvider key={label}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link to={path}>
+                    <Button
+                      variant="ghost"
+                      className={clsx(
+                        "w-full h-12 justify-start gap-4 font-normal my-1"
+                      )}
+                    >
+                      <Icon size={24} />
+                      {isExpanded && label}
+                    </Button>
+                  </Link>
+                </TooltipTrigger>
+                {!isExpanded && (
+                  <TooltipContent side="right">{label}</TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
+          );
+        })}
       </nav>
 
       <div className="my-3 mx-7 uppercase text-neutral-700 ">
