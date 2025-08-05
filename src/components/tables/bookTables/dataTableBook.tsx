@@ -16,6 +16,15 @@ import {
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { getPaginationRowModel } from "@tanstack/react-table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -30,6 +39,7 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   const isMobile = useIsMobile();
@@ -119,7 +129,7 @@ export function DataTable<TData, TValue>({
                 className={clsx(
                   "border-b border-gray-200",
                   idx % 2 === 1
-                    ? "bg-gray-100 dark:bg-neutral-800"
+                    ? "bg-gray-100 dark:bg-neutral-900"
                     : "bg-white dark:bg-neutral-950"
                 )}
               >
@@ -147,6 +157,34 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
+      <div className="flex items-center py-4">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => table.previousPage()}
+                aria-disabled={!table.getCanPreviousPage()}
+              />
+            </PaginationItem>
+            {Array.from({ length: table.getPageCount() }).map((_, i) => (
+              <PaginationItem key={i}>
+                <PaginationLink
+                  isActive={table.getState().pagination.pageIndex === i}
+                  onClick={() => table.setPageIndex(i)}
+                >
+                  {i + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            <PaginationItem>
+              <PaginationNext
+                onClick={() => table.nextPage()}
+                aria-disabled={!table.getCanNextPage()}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </div>
   );
 }

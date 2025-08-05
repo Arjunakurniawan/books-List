@@ -51,8 +51,12 @@ export const columns: ColumnDef<BookResponse>[] = [
     header: "Stock",
   },
   {
-    accessorKey: "categoryId",
-    header: "Category ID",
+    accessorKey: "category",
+    header: "Category",
+    cell: ({ row }) => {
+      const category = row.getValue("category") as { name: string } | null;
+      return category ? category.name : "not available";
+    },
   },
   {
     accessorKey: "actions",

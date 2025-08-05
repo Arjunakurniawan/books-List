@@ -1,4 +1,3 @@
-import { useState } from "react";
 import clsx from "clsx";
 import {
   LayoutDashboard,
@@ -18,6 +17,7 @@ import {
 import { BiArrowBack, BiArrowFromLeft } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useSidebar } from "../ui/sidebar";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/" },
@@ -32,7 +32,7 @@ const settingItems = [
 ];
 
 function Sidebar() {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const { state, toggleSidebar } = useSidebar();
   const isMobile = useIsMobile();
 
   if (isMobile) return null;
@@ -40,29 +40,29 @@ function Sidebar() {
   return (
     <aside
       className={clsx(
-        "relative h-screen bg-neutral-900 font-sans transition-all duration-300  text-white",
-        isExpanded ? "w-60" : "w-28"
+        "fixed left-0 top-0 z-40 h-screen bg-neutral-900 font-sans transition-all duration-300 text-white",
+        state === "expanded" ? "w-60" : "w-28"
       )}
     >
       <div className="flex items-center justify-between p-4">
         <h1
           className={clsx(
             "text-2xl pt-4 pl-5 pr-32 font-bold",
-            !isExpanded && "hidden"
+            state === "collapsed" && "hidden"
           )}
         >
           Books.
         </h1>
-        {!isExpanded ? (
+        {state === "collapsed" ? (
           <h1 className="font-bold text-2xl pt-4 pl-8 pr-32">B.</h1>
         ) : null}
         <Button
           size="icon"
           variant="secondary"
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={toggleSidebar}
           className="absolute top-4 -right-6 w-10 h-10 shadow-md"
         >
-          {isExpanded ? <BiArrowBack /> : <BiArrowFromLeft />}
+          {state === "expanded" ? <BiArrowBack /> : <BiArrowFromLeft />}
         </Button>
       </div>
 
@@ -80,11 +80,11 @@ function Sidebar() {
                       )}
                     >
                       <Icon size={24} />
-                      {isExpanded && label}
+                      {state === "expanded" && label}
                     </Button>
                   </Link>
                 </TooltipTrigger>
-                {!isExpanded && (
+                {state === "collapsed" && (
                   <TooltipContent side="right">{label}</TooltipContent>
                 )}
               </Tooltip>
@@ -94,7 +94,7 @@ function Sidebar() {
       </nav>
 
       <div className="my-3 mx-7 uppercase text-neutral-700 ">
-        <p className={clsx("text-base", !isExpanded && "opacity-0")}>
+        <p className={clsx("text-base", state === "collapsed" && "opacity-0")}>
           Settings
         </p>
       </div>
@@ -109,10 +109,10 @@ function Sidebar() {
                   className="w-full h-12 justify-start gap-4 font-normal"
                 >
                   <Icon size={24} />
-                  {isExpanded && label}
+                  {state === "expanded" && label}
                 </Button>
               </TooltipTrigger>
-              {!isExpanded && (
+              {state === "collapsed" && (
                 <TooltipContent side="right">{label}</TooltipContent>
               )}
             </Tooltip>

@@ -12,7 +12,7 @@ import { ModeToggle } from "../mode-toggle";
 
 function TopBar() {
   return (
-    <header className="flex p-2 px-8 justify-end">
+    <header className="flex p-3 px-8 shadow-sm justify-end fixed top-0 left-0 right-0 z-20 bg-white dark:bg-neutral-900">
       <div className="flex items-center gap-2">
         <Button variant="outline" size="icon" className="px-2">
           <Bell />
