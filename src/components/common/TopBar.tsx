@@ -12,18 +12,26 @@ import { ModeToggle } from "../mode-toggle";
 
 function TopBar() {
   return (
-    <header className="flex p-3 px-8 shadow-sm justify-end fixed top-0 left-0 right-0 z-20 bg-white dark:bg-neutral-900">
+    <header className="flex p-3 px-8 shadow-sm justify-end fixed top-0 left-0 right-0 z-20 bg-white dark:bg-neutral-950">
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="icon" className="px-2">
+        <Button
+          variant="outline"
+          size="icon"
+          className="px-2 border-neutral-900"
+        >
           <Bell />
         </Button>
-        <Button variant="outline" size="icon" className="px-2">
+        <Button
+          variant="outline"
+          size="icon"
+          className="px-2 border-neutral-900"
+        >
           <Mail />
         </Button>
         <ModeToggle />
 
         <Select>
-          <SelectTrigger className="flex gap-2 px-3 py-1 border rounded-md focus:outline-none">
+          <SelectTrigger className="flex gap-2 px-3 py-1 border rounded-md focus:outline-none dark:border-neutral-900">
             <img
               src={avatar}
               alt="User"
@@ -32,7 +40,7 @@ function TopBar() {
             <SelectValue placeholder="Kim Jong Un" />
           </SelectTrigger>
 
-          <SelectContent align="end">
+          <SelectContent>
             <SelectItem value="profile">Profile</SelectItem>
             <SelectItem value="settings">Settings</SelectItem>
             <SelectItem value="logout">Logout</SelectItem>

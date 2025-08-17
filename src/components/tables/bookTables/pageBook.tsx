@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { getBooks } from "@/services/book";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search } from "lucide-react";
 
 export default function BookTable() {
   const [book, setBook] = useState<BookResponse[]>([]);
@@ -24,21 +23,15 @@ export default function BookTable() {
   }, []);
 
   return (
-    <div className="py-10 pr-8">
+    <div className="py-10 px-16">
       <Button
         className="mb-4 text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white font-normal"
         variant={"outline"}
       >
-        <Plus />
         Add Book
       </Button>
 
-      <div className="relative mb-4 w-80 float-right">
-        <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-          <Search className="w-4 h-4 text-gray-400" />
-        </span>
-        <Input placeholder="Search books..." className="pl-10 w-full" />
-      </div>
+      <Input placeholder="Search books..." className="mb-4 w-80 float-right " />
       <DataTable columns={columns} data={book} />
     </div>
   );

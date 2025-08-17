@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import type { BookResponse } from "@/types/ApiResponse.type";
+import type { CategoryResponse } from "@/types/ApiResponse.type";
 import { type ColumnDef } from "@tanstack/react-table";
 import {
   ArrowDownNarrowWide,
@@ -8,7 +8,7 @@ import {
   Trash,
 } from "lucide-react";
 
-export const columns: ColumnDef<BookResponse>[] = [
+export const columns: ColumnDef<CategoryResponse>[] = [
   {
     accessorKey: "id",
     header: "No",
@@ -32,35 +32,6 @@ export const columns: ColumnDef<BookResponse>[] = [
           )}
         </button>
       );
-    },
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-  },
-  {
-    accessorKey: "image",
-    header: "Image",
-  },
-  {
-    accessorKey: "price",
-    header: "Price",
-  },
-  {
-    accessorKey: "stock",
-    header: "Stock",
-  },
-  {
-    accessorKey: "category",
-    header: "Category",
-    cell: ({ row }) => {
-      const rowData = row.original;
-      const category = row.getValue("category") as { name: string } | null;
-
-      console.log("Category:", category);
-      console.log("CategoryName:", rowData.category?.name);
-
-      return category?.name || "no category";
     },
   },
   {

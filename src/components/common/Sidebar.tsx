@@ -74,9 +74,9 @@ function Sidebar() {
                 <TooltipTrigger asChild>
                   <Link to={path}>
                     <Button
-                      variant="ghost"
+                      variant={"ghost"}
                       className={clsx(
-                        "w-full h-12 justify-start gap-4 font-normal my-1"
+                        "w-full h-12 justify-start gap-4 font-normal my-1 hover:bg-neutral-800"
                       )}
                     >
                       <Icon size={24} />

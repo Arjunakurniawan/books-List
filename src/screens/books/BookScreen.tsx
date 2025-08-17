@@ -20,7 +20,7 @@ function BookScreen() {
   return (
     <div
       className={clsx(
-        "h-screen overflow-y-auto transition-all duration-300 mt-20",
+        "h-screen transition-all duration-300 mt-20",
         isMobile ? "m-0" : state === "expanded" ? "ml-60" : "ml-28"
       )}
     >

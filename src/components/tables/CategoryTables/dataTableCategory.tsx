@@ -16,21 +16,13 @@ import {
 } from "@/components/ui/table";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getPaginationRowModel } from "@tanstack/react-table";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTableCategory<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -94,7 +86,7 @@ export function DataTable<TData, TValue>({
     );
   }
   return (
-    <div className="rounded-md border w-full">
+    <div className="rounded-md border">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -151,34 +143,6 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      <div className="flex items-center py-4">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={() => table.previousPage()}
-                aria-disabled={!table.getCanPreviousPage()}
-              />
-            </PaginationItem>
-            {Array.from({ length: table.getPageCount() }).map((_, i) => (
-              <PaginationItem key={i}>
-                <PaginationLink
-                  isActive={table.getState().pagination.pageIndex === i}
-                  onClick={() => table.setPageIndex(i)}
-                >
-                  {i + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => table.nextPage()}
-                aria-disabled={!table.getCanNextPage()}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
     </div>
   );
 }
