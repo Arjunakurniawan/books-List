@@ -17,14 +17,14 @@ function TopBar() {
         <Button
           variant="outline"
           size="icon"
-          className="px-2 border-neutral-900"
+          className="px-2 dark:border-neutral-900"
         >
           <Bell />
         </Button>
         <Button
           variant="outline"
           size="icon"
-          className="px-2 border-neutral-900"
+          className="px-2 dark:border-neutral-900"
         >
           <Mail />
         </Button>
