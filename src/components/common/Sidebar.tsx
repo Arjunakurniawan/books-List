@@ -58,7 +58,7 @@ function Sidebar() {
         ) : null}
         <Button
           size="icon"
-          variant="secondary"
+          variant="outline"
           onClick={toggleSidebar}
           className="absolute top-4 -right-6 w-10 h-10 shadow-md"
         >
@@ -74,7 +74,7 @@ function Sidebar() {
                 <TooltipTrigger asChild>
                   <Link to={path}>
                     <Button
-                      variant={"ghost"}
+                      variant={"sidelink"}
                       className={clsx(
                         "w-full h-12 justify-start gap-4 font-normal my-1 hover:bg-neutral-800"
                       )}
@@ -105,7 +105,7 @@ function Sidebar() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  variant="ghost"
+                  variant="sidelink"
                   className="w-full h-12 justify-start gap-4 font-normal"
                 >
                   <Icon size={24} />
