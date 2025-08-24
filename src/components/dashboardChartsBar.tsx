@@ -3,6 +3,7 @@
 import { MoreHorizontal } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis, Cell } from "recharts";
 import { useState } from "react";
+import { useTheme } from "@/components/theme-provider";
 
 import {
   Card,
@@ -41,17 +42,27 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ChartBarDefault() {
+export function ChartBar() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const { theme } = useTheme();
+
+  // Determine if current theme is dark
+  const isDark =
+    theme === "dark" ||
+    (theme === "system" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  // Define colors for light and dark mode
+  const gridColor = isDark ? "#727273" : "#e5e7eb";
 
   return (
-    <Card className="w-full bg-white rounded-2xl border shadow-md">
+    <Card className="w-full bg-white rounded-2xl border shadow-md dark:bg-neutral-950 dark:border-neutral-800">
       <CardHeader className="flex flex-row items-center justify-between pb-6">
         <div>
-          <CardTitle className="text-xl font-semibold text-gray-800">
+          <CardTitle className="text-xl font-semibold text-gray-800 dark:text-white">
             Monthly Sales
           </CardTitle>
-          <CardDescription className="text-gray-500 mt-1 text-sm">
+          <CardDescription className="text-neutral-400 dark:text-neutral-500 mt-1 text-sm">
             Book sales performance throughout the year
           </CardDescription>
         </div>
@@ -68,7 +79,7 @@ export function ChartBarDefault() {
             <CartesianGrid
               vertical={false}
               strokeDasharray="0"
-              stroke="#f3f4f6"
+              stroke={gridColor}
               strokeWidth={1}
             />
             <XAxis
@@ -107,7 +118,7 @@ export function ChartBarDefault() {
                   fill={
                     hoveredIndex === null || hoveredIndex === index
                       ? "#4f46e5"
-                      : "#e5e7eb"
+                      : "#434445"
                   }
                   style={{
                     transition: "fill 0.3s ease-in-out",

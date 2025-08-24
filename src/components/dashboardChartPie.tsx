@@ -17,20 +17,25 @@ const data = [
 ];
 
 const targetData = [
-  { label: "Target", value: "$20K", trend: "down", color: "text-red-500" },
-  { label: "Revenue", value: "$16K", trend: "up", color: "text-emerald-500" },
-  { label: "Today", value: "$1.5K", trend: "up", color: "text-emerald-500" },
+  { label: "Target", value: "Rp.20jt", trend: "down", color: "text-red-500" },
+  {
+    label: "Revenue",
+    value: "Rp.16jt",
+    trend: "up",
+    color: "text-emerald-500",
+  },
+  { label: "Today", value: "Rp.1.5jt", trend: "up", color: "text-emerald-500" },
 ];
 
-export function MonthlyTargetChart() {
+export function ChartPie() {
   return (
-    <Card className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm">
+    <Card className="w-full bg-white rounded-2xl border dark:border-neutral-800 dark:bg-neutral-950">
       <CardHeader className="flex flex-row items-center justify-between pb-4">
         <div>
-          <CardTitle className="text-lg font-semibold text-gray-900">
+          <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
             Monthly Target
           </CardTitle>
-          <CardDescription className="text-gray-500 mt-1 text-sm">
+          <CardDescription className="text-neutral-400 dark:text-neutral-500 mt-1 text-sm">
             Target you've set for each month
           </CardDescription>
         </div>
@@ -61,7 +66,9 @@ export function MonthlyTargetChart() {
 
           {/* Center Text */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="text-3xl font-bold text-gray-900 mb-1">75.55%</div>
+            <div className="text-2xl font-bold text-gray-900 mb-1 dark:text-white">
+              75.55%
+            </div>
             <div className="flex items-center text-sm text-emerald-500 font-medium">
               <TrendingUp className="h-4 w-4 mr-1" />
               +10%
@@ -71,11 +78,8 @@ export function MonthlyTargetChart() {
 
         {/* Description */}
         <div className="text-center mb-8 px-2">
-          <p className="text-gray-600 text-sm leading-relaxed">
-            You earn $3,287 today, it's higher than last month.
-          </p>
-          <p className="text-gray-700 text-sm font-medium mt-1">
-            Keep up your good work!
+          <p className="text-neutral-400 dark:text-neutral-600 text-sm leading-relaxed">
+            You earn Rp.3jt today, it's higher than last month.
           </p>
         </div>
 

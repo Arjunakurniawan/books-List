@@ -1,6 +1,6 @@
 import DashboardCards from "@/components/dashboardCards";
-import { ChartBarDefault } from "@/components/dashboardCharts";
-import { MonthlyTargetChart } from "@/components/monthlyTargetChart";
+import { ChartBar } from "@/components/dashboardChartsBar";
+import { ChartPie } from "@/components/dashboardChartPie";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -51,11 +51,11 @@ function Dashboard() {
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
-              <div className="xl:col-span-8">
-                <ChartBarDefault />
+              <div className="md:col-span-8">
+                <ChartBar />
               </div>
-              <div className="xl:col-span-4">
-                <MonthlyTargetChart />
+              <div className="md:col-span-4">
+                <ChartPie />
               </div>
             </div>
           </div>
