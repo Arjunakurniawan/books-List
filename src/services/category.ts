@@ -13,3 +13,18 @@ export const getCategories = async () => {
     throw error;
   }
 };
+
+// Create new category
+export const createCategory = async (categoryData: CategoryResponse) => {
+  try {
+    const response = await api.post<ApiResponse<CategoryResponse>>(
+      "/category/create",
+      categoryData
+    );
+    console.log("Created category:", response.data);
+    return response.data.data;
+  } catch (error) {
+    console.error("Error creating category:", error);
+    throw error;
+  }
+};
