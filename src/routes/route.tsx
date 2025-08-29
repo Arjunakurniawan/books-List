@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import Dashboard from "@/screens/dashboards/DashboardScreen";
 import BookScreen from "@/screens/books/BookScreen";
 import CategoryScreen from "@/screens/categories/CategoryScreen";
-import CategoryCreateScreen from "@/screens/categories/CategoryCreateScreen";
 
 function RoutesApp() {
   return (
@@ -10,7 +9,7 @@ function RoutesApp() {
       <Route path="/" element={<Dashboard />} />
       <Route path="/books" element={<BookScreen />} />
       <Route path="/categories" element={<CategoryScreen />} />
-      <Route path="/category/create" element={<CategoryCreateScreen />} />
+      <Route path="/category/create" element={<CategoryScreen />} />
     </Routes>
   );
 }
