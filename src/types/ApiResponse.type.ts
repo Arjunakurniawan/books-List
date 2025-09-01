@@ -23,6 +23,7 @@ export type BookResponse = {
 };
 
 export type CategoryResponse = {
+  id?: string | number;
   name: string;
 };
 

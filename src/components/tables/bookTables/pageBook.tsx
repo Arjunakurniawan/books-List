@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { getBooks } from "@/services/book";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Plus } from "lucide-react";
 
 export default function BookTable() {
   const [book, setBook] = useState<BookResponse[]>([]);
@@ -28,6 +29,7 @@ export default function BookTable() {
         className="mb-4 text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white font-normal"
         variant={"outline"}
       >
+        <Plus className="h-4 w-4" />
         Add Book
       </Button>
 

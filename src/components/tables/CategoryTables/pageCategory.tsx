@@ -1,12 +1,12 @@
 import type { CategoryResponse } from "@/types/ApiResponse.type";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getCategories, createCategory } from "@/services/category";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { DataTableCategory } from "./dataTableCategory";
-import { columns } from "./CategoryColumns";
+import { createColumns } from "./CategoryColumns";
 import {
   Dialog,
   DialogContent,
@@ -26,19 +26,23 @@ export default function CategoryTable() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getCategories();
-        setCategory(response);
-        console.log("Fetched categories:", response);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
+  // Function to refresh categories data
+  const refreshCategories = useCallback(async () => {
+    try {
+      const response = await getCategories();
+      setCategory(response);
+      console.log("Refreshed categories:", response);
+    } catch (error) {
+      console.error("Error refreshing data:", error);
+    }
   }, []);
+
+  useEffect(() => {
+    refreshCategories();
+  }, [refreshCategories]);
+
+  // Create columns with refresh callback
+  const columns = createColumns(refreshCategories);
 
   const handleSubmit = async () => {
     if (!categoryName.trim()) {
@@ -57,9 +61,8 @@ export default function CategoryTable() {
       setSuccess(true);
       setCategoryName("");
 
-      // Refresh data
-      const response = await getCategories();
-      setCategory(response);
+      // Refresh data using the callback
+      await refreshCategories();
 
       // Show success for 1 second then close
       setTimeout(() => {
@@ -91,7 +94,7 @@ export default function CategoryTable() {
           <DialogTrigger asChild>
             <Link to="/category/create">
               <Button
-                className="mb-4 text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white font-normal gap-2"
+                className="mb-4 text-blue-700 border-blue-700 hover:bg-blue-700 hover:text-white font-normal gap-2"
                 variant="outline"
               >
                 <Plus className="h-4 w-4" />
@@ -99,13 +102,10 @@ export default function CategoryTable() {
               </Button>
             </Link>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[425px] dark:bg-neutral-950 border dark:border-neutral-800">
             <DialogHeader>
               <DialogTitle>Create New Category</DialogTitle>
-              <DialogDescription>
-                Add a new category to organize your books. Enter a category name
-                below.
-              </DialogDescription>
+              <DialogDescription>Add a new category</DialogDescription>
             </DialogHeader>
 
             <div className="grid gap-4 py-4">
@@ -129,7 +129,7 @@ export default function CategoryTable() {
 
               {/* Input Field */}
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="category-name" className="text-right">
+                <Label htmlFor="category-name" className="text-left">
                   Name
                 </Label>
                 <Input
@@ -137,7 +137,7 @@ export default function CategoryTable() {
                   placeholder="Enter category name"
                   value={categoryName}
                   onChange={(e) => setCategoryName(e.target.value)}
-                  className="col-span-3"
+                  className="col-span-4 border border-neutral-800 outline-none dark:focus-visible:border-blue-800"
                   disabled={loading || success}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
@@ -155,6 +155,7 @@ export default function CategoryTable() {
                   variant="outline"
                   onClick={() => setDialogOpen(false)}
                   disabled={loading || success}
+                  className="dark:bg-neutral-950 border dark:border-neutral-800"
                 >
                   Cancel
                 </Button>

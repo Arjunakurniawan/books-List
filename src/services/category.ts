@@ -28,3 +28,16 @@ export const createCategory = async (categoryData: CategoryResponse) => {
     throw error;
   }
 };
+
+export const deleteCategory = async (categoryId: string) => {
+  try {
+    const response = await api.delete<ApiResponse<CategoryResponse>>(
+      `/category/${categoryId}`
+    );
+    console.log("Deleted category:", response.data);
+    return response.data.data;
+  } catch (error) {
+    console.error("Error deleting category:", error);
+    throw error;
+  }
+};

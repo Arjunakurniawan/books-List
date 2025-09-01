@@ -40,7 +40,7 @@ function TopBar() {
             <SelectValue placeholder="Kim Jong Un" />
           </SelectTrigger>
 
-          <SelectContent>
+          <SelectContent className="dark:bg-neutral-950 border dark:border-neutral-800">
             <SelectItem value="profile">Profile</SelectItem>
             <SelectItem value="settings">Settings</SelectItem>
             <SelectItem value="logout">Logout</SelectItem>

@@ -1,14 +1,13 @@
 import { Button } from "@/components/ui/button";
+import DeleteButton from "@/components/utils/DeleteButton";
+import { deleteCategory } from "@/services/category";
 import type { CategoryResponse } from "@/types/ApiResponse.type";
 import { type ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowDownNarrowWide,
-  ArrowUpNarrowWide,
-  PenLine,
-  Trash,
-} from "lucide-react";
+import { ArrowDownNarrowWide, ArrowUpNarrowWide, PenLine } from "lucide-react";
 
-export const columns: ColumnDef<CategoryResponse>[] = [
+export const createColumns = (
+  onDelete?: () => void
+): ColumnDef<CategoryResponse>[] => [
   {
     accessorKey: "id",
     header: "No",
@@ -37,25 +36,27 @@ export const columns: ColumnDef<CategoryResponse>[] = [
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: () => (
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          className="flex items-center gap-1 text-black dark:text-white px-2 py-1 rounded p-3 h-10"
-          type="button"
-          aria-label="Edit"
-        >
-          <PenLine className="w-4 h-4" />
-        </Button>
-        <Button
-          variant="outline"
-          className="flex items-center gap-1 text-black dark:text-white px-2 py-1 rounded p-3 h-10"
-          type="button"
-          aria-label="Delete"
-        >
-          <Trash className="w-4 h-4" />
-        </Button>
-      </div>
-    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            className="flex items-center gap-1 text-black dark:text-white px-2 py-1 rounded p-3 h-10"
+            type="button"
+            aria-label="Edit"
+          >
+            <PenLine className="w-4 h-4" />
+          </Button>
+          <DeleteButton
+            itemId={row.original.id as string}
+            itemName={row.original.name}
+            onDelete={onDelete}
+            deleteFunction={async (id: string) => {
+              await deleteCategory(id);
+            }}
+          />
+        </div>
+      );
+    },
   },
 ];
