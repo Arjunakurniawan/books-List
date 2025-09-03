@@ -80,7 +80,6 @@ export default function CategoryTable() {
   const handleOpenChange = (open: boolean) => {
     setDialogOpen(open);
     if (!open) {
-      // Reset form when closing
       setCategoryName("");
       setError("");
       setSuccess(false);
@@ -102,7 +101,7 @@ export default function CategoryTable() {
               </Button>
             </Link>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] dark:bg-neutral-950 border dark:border-neutral-800">
+          <DialogContent className="sm:max-w-[425px] dark:bg-neutral-950 border dark:border-neutral-800 backdrop-blur-sm">
             <DialogHeader>
               <DialogTitle>Create New Category</DialogTitle>
               <DialogDescription>Add a new category</DialogDescription>
@@ -113,7 +112,7 @@ export default function CategoryTable() {
               {success && (
                 <div className="p-3 bg-green-50 border border-green-200 rounded-md dark:bg-green-900/20 dark:border-green-800">
                   <p className="text-green-700 dark:text-green-300 text-sm font-medium">
-                    ✅ Category created successfully!
+                    Category created successfully!
                   </p>
                 </div>
               )}
@@ -122,7 +121,7 @@ export default function CategoryTable() {
               {error && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-md dark:bg-red-900/20 dark:border-red-800">
                   <p className="text-red-700 dark:text-red-300 text-sm font-medium">
-                    ❌ {error}
+                    {error}
                   </p>
                 </div>
               )}
