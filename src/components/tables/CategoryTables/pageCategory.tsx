@@ -4,7 +4,7 @@ import { getCategories, createCategory } from "@/services/category";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
+import { CircleCheckBig, Plus } from "lucide-react";
 import { DataTableCategory } from "./dataTableCategory";
 import { createColumns } from "./CategoryColumns";
 import {
@@ -17,6 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Link } from "react-router-dom";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function CategoryTable() {
   const [category, setCategory] = useState<CategoryResponse[]>([]);
@@ -47,6 +48,11 @@ export default function CategoryTable() {
   const handleSubmit = async () => {
     if (!categoryName.trim()) {
       setError("Category name is required");
+
+      // Auto hide error after animation duration (3 seconds)
+      setTimeout(() => {
+        setError("");
+      }, 3000);
       return;
     }
 
@@ -72,6 +78,11 @@ export default function CategoryTable() {
     } catch (error) {
       console.error("Error creating category:", error);
       setError("Failed to create category. Please try again.");
+
+      // Auto hide error after animation duration (3 seconds)
+      setTimeout(() => {
+        setError("");
+      }, 3000);
     } finally {
       setLoading(false);
     }
@@ -88,7 +99,32 @@ export default function CategoryTable() {
 
   return (
     <div className="py-10">
-      <div className="flex gap-96">
+      {/* Success Alert */}
+      {success && (
+        <Alert
+          variant="default"
+          className="animate-fade-left-out bg-green-100 dark:bg-green-900/20 dark:text-green-400 border-green-600 border-l-4 border-t-0 border-b-0 border-r-0 mb-4 text-green-600 fixed top-4 right-4 z-[9999] w-80"
+        >
+          <CircleCheckBig color="#4ade80" size={15} />
+          <AlertTitle>Category Created Successfully</AlertTitle>
+          <AlertDescription>
+            You have successfully created a new category.
+          </AlertDescription>
+        </Alert>
+      )}
+      {/* Error Alert */}
+      {error && (
+        <Alert
+          variant="destructive"
+          className="animate-fade-left-out bg-red-100/85 dark:bg-red-900/45 dark:text-red-400 border-red-600 border-l-4 border-t-0 border-b-0 border-r-0 mb-4 text-red-600 fixed top-4 right-4 z-[9999] w-80"
+        >
+          <CircleCheckBig color="#ef4444" size={15} />
+          <AlertTitle>Error Creating Category</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      <div className="flex gap-96 relative">
         <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
           <DialogTrigger asChild>
             <Link to="/category/create">
@@ -101,31 +137,13 @@ export default function CategoryTable() {
               </Button>
             </Link>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] dark:bg-neutral-950 border dark:border-neutral-800 backdrop-blur-sm">
+          <DialogContent className="sm:max-w-[425px] dark:bg-neutral-950 border dark:border-neutral-800">
             <DialogHeader>
               <DialogTitle>Create New Category</DialogTitle>
               <DialogDescription>Add a new category</DialogDescription>
             </DialogHeader>
 
             <div className="grid gap-4 py-4">
-              {/* Success Message */}
-              {success && (
-                <div className="p-3 bg-green-50 border border-green-200 rounded-md dark:bg-green-900/20 dark:border-green-800">
-                  <p className="text-green-700 dark:text-green-300 text-sm font-medium">
-                    Category created successfully!
-                  </p>
-                </div>
-              )}
-
-              {/* Error Message */}
-              {error && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-md dark:bg-red-900/20 dark:border-red-800">
-                  <p className="text-red-700 dark:text-red-300 text-sm font-medium">
-                    {error}
-                  </p>
-                </div>
-              )}
-
               {/* Input Field */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="category-name" className="text-left">

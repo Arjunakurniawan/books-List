@@ -16,7 +16,6 @@ function CategoryScreen() {
   const isMobile = useIsMobile();
   const { state } = useSidebar();
 
-  if (isMobile) return null;
   return (
     <>
       <div

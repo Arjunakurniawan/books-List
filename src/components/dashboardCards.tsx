@@ -10,7 +10,6 @@ import { getBooks } from "@/services/book";
 import { getCategories } from "@/services/category";
 
 import { BookIcon, Tag, TrendingUp } from "lucide-react";
-import path from "path";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
