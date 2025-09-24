@@ -4,7 +4,7 @@ import { getCategories, createCategory } from "@/services/category";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CircleCheckBig, Plus } from "lucide-react";
+import { CircleAlert, CircleCheckBig, Plus } from "lucide-react";
 import { DataTableCategory } from "./dataTableCategory";
 import { createColumns } from "./CategoryColumns";
 import {
@@ -43,7 +43,7 @@ export default function CategoryTable() {
   }, [refreshCategories]);
 
   // Create columns with refresh callback
-  const columns = createColumns(refreshCategories);
+  const columns = createColumns();
 
   const handleSubmit = async () => {
     if (!categoryName.trim()) {
@@ -67,10 +67,8 @@ export default function CategoryTable() {
       setSuccess(true);
       setCategoryName("");
 
-      // Refresh data using the callback
       await refreshCategories();
 
-      // Show success for 1 second then close
       setTimeout(() => {
         setDialogOpen(false);
         setSuccess(false);
@@ -79,7 +77,6 @@ export default function CategoryTable() {
       console.error("Error creating category:", error);
       setError("Failed to create category. Please try again.");
 
-      // Auto hide error after animation duration (3 seconds)
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -118,7 +115,7 @@ export default function CategoryTable() {
           variant="destructive"
           className="animate-fade-left-out bg-red-100/85 dark:bg-red-900/45 dark:text-red-400 border-red-600 border-l-4 border-t-0 border-b-0 border-r-0 mb-4 text-red-600 fixed top-4 right-4 z-[9999] w-80"
         >
-          <CircleCheckBig color="#ef4444" size={15} />
+          <CircleAlert color="#ef4444" size={15} />
           <AlertTitle>Error Creating Category</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
@@ -177,11 +174,7 @@ export default function CategoryTable() {
                   Cancel
                 </Button>
               </Link>
-              <Button
-                onClick={handleSubmit}
-                disabled={loading || success || !categoryName.trim()}
-                className="gap-2"
-              >
+              <Button onClick={handleSubmit} className="gap-2">
                 {loading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

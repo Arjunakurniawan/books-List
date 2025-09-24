@@ -1,13 +1,11 @@
 import { Button } from "@/components/ui/button";
 import DeleteButton from "@/components/utils/DeleteButton";
-import { deleteCategory } from "@/services/category";
+import { deleteCategory, getCategories } from "@/services/category";
 import type { CategoryResponse } from "@/types/ApiResponse.type";
 import { type ColumnDef } from "@tanstack/react-table";
 import { ArrowDownNarrowWide, ArrowUpNarrowWide, PenLine } from "lucide-react";
 
-export const createColumns = (
-  onDelete?: () => void
-): ColumnDef<CategoryResponse>[] => [
+export const createColumns = (): ColumnDef<CategoryResponse>[] => [
   {
     accessorKey: "id",
     header: "No",
@@ -50,9 +48,11 @@ export const createColumns = (
           <DeleteButton
             itemId={row.original.id as string}
             itemName={row.original.name}
-            onDelete={onDelete}
             deleteFunction={async (id: string) => {
               await deleteCategory(id);
+            }}
+            onRefresh={() => {
+              getCategories();
             }}
           />
         </div>
