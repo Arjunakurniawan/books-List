@@ -41,6 +41,7 @@ const DeleteButton = ({
   const handleDelete = async () => {
     setIsDeleting(true);
     setSuccess(false);
+    setError("");
 
     try {
       await deleteFunction(itemId);
@@ -50,22 +51,25 @@ const DeleteButton = ({
         onDelete();
       }
 
-      if (onRefresh) {
-        onRefresh();
-      }
-
+      // Tutup dialog dan refresh data setelah 1.5 detik
       setTimeout(() => {
-        setSuccess(false);
         setIsOpen(false);
-      }, 2000);
+        setSuccess(false);
+
+        if (onRefresh) {
+          onRefresh();
+        }
+      }, 1000);
     } catch (error) {
       console.error("Error deleting item:", error);
 
       setSuccess(false);
       setError("Failed to delete item. Please try again.");
 
+      // Tutup dialog setelah 3 detik jika error
       setTimeout(() => {
         setError("");
+        setIsOpen(false);
       }, 3000);
     } finally {
       setIsDeleting(false);

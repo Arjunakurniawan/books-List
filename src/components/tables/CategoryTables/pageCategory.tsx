@@ -43,7 +43,7 @@ export default function CategoryTable() {
   }, [refreshCategories]);
 
   // Create columns with refresh callback
-  const columns = createColumns();
+  const columns = createColumns(refreshCategories);
 
   const handleSubmit = async () => {
     if (!categoryName.trim()) {

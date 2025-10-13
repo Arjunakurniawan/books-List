@@ -1,5 +1,5 @@
 import {
-  type ColumnDef,
+type ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
