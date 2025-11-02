@@ -133,11 +133,9 @@ export default function AddBookScreen() {
                 </Field>
                 <div className="grid grid-cols-3 gap-4">
                   <Field>
-                    <FieldLabel htmlFor="checkout-exp-month-ts6">
-                      Month
-                    </FieldLabel>
-                    <Select defaultValue="">
-                      <SelectTrigger id="checkout-exp-month-ts6">
+                    <FieldLabel>Month</FieldLabel>
+                    <Select>
+                      <SelectTrigger>
                         <SelectValue placeholder="MM" />
                       </SelectTrigger>
                       <SelectContent>
@@ -205,28 +203,31 @@ export default function AddBookScreen() {
                 />
               </FieldGroup>
             </FieldSet>
+
             <FieldSet>
-              <FieldGroup>
+              <div className="grid grid-cols-2 space-x-2">
                 <Field>
-                  <FieldLabel htmlFor="Stock">Stock</FieldLabel>
+                  <FieldLabel>Stock</FieldLabel>
                   <Input type="text" placeholder="0" />
                 </Field>
-              </FieldGroup>
-              <FieldGroup>
-                <FieldLabel>Category</FieldLabel>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {category.map((cat) => (
-                      <SelectItem key={cat.name} value={cat.name}>
-                        {cat.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FieldGroup>
+
+                <Field>
+                  <FieldLabel>Category</FieldLabel>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {category.map((cat) => (
+                        <SelectItem key={cat.name} value={cat.name}>
+                          {cat.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </Field>
+              </div>
+
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="Price">Price</FieldLabel>
