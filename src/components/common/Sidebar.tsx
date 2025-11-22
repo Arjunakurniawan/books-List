@@ -40,27 +40,27 @@ function Sidebar() {
   return (
     <aside
       className={clsx(
-        "fixed left-0 top-0 z-40 h-screen bg-neutral-900 font-sans transition-all duration-300 text-white",
+        "fixed left-0 top-0 z-40 h-screen bg-neutral-900 font-sans transition-all duration-300 text-black",
         state === "expanded" ? "w-60" : "w-28"
       )}
     >
       <div className="flex items-center justify-between p-4">
         <h1
           className={clsx(
-            "text-2xl pt-4 pl-5 pr-32 font-bold",
+            "text-2xl pt-4 pl-5 pr-32 font-bold text-white",
             state === "collapsed" && "hidden"
           )}
         >
           Books.
         </h1>
         {state === "collapsed" ? (
-          <h1 className="font-bold text-2xl pt-4 pl-8 pr-32">B.</h1>
+          <h1 className="font-bold text-2xl pt-4 pl-8 pr-3 text-white">B.</h1>
         ) : null}
         <Button
           size="icon"
           variant="outline"
           onClick={toggleSidebar}
-          className="absolute top-4 -right-6 w-10 h-10 shadow-md"
+          className="absolute top-4 -right-6 w-10 h-10 shadow-md dark:text-white"
         >
           {state === "expanded" ? <BiArrowBack /> : <BiArrowFromLeft />}
         </Button>
@@ -74,9 +74,8 @@ function Sidebar() {
                 <TooltipTrigger asChild>
                   <Link to={path}>
                     <Button
-                      variant={"sidelink"}
                       className={clsx(
-                        "w-full h-12 justify-start gap-4 font-normal my-1 hover:bg-neutral-800"
+                        "bg-neutral-900 w-full h-12 justify-start gap-4 font-normal my-1 hover:bg-neutral-800 dark:text-white"
                       )}
                     >
                       <Icon size={24} />
@@ -105,8 +104,9 @@ function Sidebar() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  variant="sidelink"
-                  className="w-full h-12 justify-start gap-4 font-normal"
+                  className={clsx(
+                    "bg-neutral-900 w-full h-12 justify-start gap-4 font-normal my-1 hover:bg-neutral-800 dark:text-white"
+                  )}
                 >
                   <Icon size={24} />
                   {state === "expanded" && label}

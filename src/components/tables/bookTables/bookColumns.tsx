@@ -41,6 +41,22 @@ export const columns: ColumnDef<BookResponse>[] = [
   {
     accessorKey: "image",
     header: "Image",
+    cell: ({ row }) => {
+      const imageValue = row.getValue("image") as string | null | undefined;
+      const rowData = row.original as BookResponse;
+
+      if (!imageValue) {
+        return <span className="text-sm text-muted-foreground">No image</span>;
+      }
+
+      return (
+        <img
+          src={imageValue}
+          alt={rowData.name ?? "image"}
+          className="w-12 h-12 object-cover rounded"
+        />
+      );
+    },
   },
   {
     accessorKey: "price",

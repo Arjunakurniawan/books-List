@@ -8,7 +8,13 @@ import {
 import { useSidebar } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import clsx from "clsx";
-import { SlashIcon, ArrowLeft, ImageUp } from "lucide-react";
+import {
+  SlashIcon,
+  ArrowLeft,
+  ImageUp,
+  CircleCheckBig,
+  CircleAlert,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 import {
@@ -16,7 +22,6 @@ import {
   FieldGroup,
   FieldLabel,
   FieldLegend,
-  FieldSeparator,
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -34,15 +39,27 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getCategories } from "@/services/category";
-import type { CategoryResponse } from "@/types/ApiResponse.type";
+import type { BookResponse, CategoryResponse } from "@/types/ApiResponse.type";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { createBook } from "@/services/book";
 
 export default function AddBookScreen() {
   const isMobile = useIsMobile();
   const { state } = useSidebar();
 
   const [category, setCategory] = useState<CategoryResponse[]>([]);
+  const [success, setSuccess] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    image: "",
+    price: 0,
+    stock: 0,
+    categoryId: "",
+  });
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -50,30 +67,53 @@ export default function AddBookScreen() {
         const response = await getCategories();
         setCategory(response);
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        setError("Failed Creating Book");
+        console.error("Error Creating Book:", error);
       }
     };
 
     fetchCategories();
   }, []);
 
-  const months = Array.from({ length: 12 }, (_, i) => {
-    const month = (i + 1).toString().padStart(2, "0");
-    return month;
-  });
+  const handleButtonSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const currentYear = new Date().getFullYear();
-  const startYear = 1900;
-  const endYear = currentYear + 5;
-  const years = Array.from(
-    { length: endYear - startYear + 1 },
-    (_, i) => startYear + i
-  ).reverse();
+    // Validasi
+    if (!formData.name.trim()) {
+      setError("Book name is required");
+      setTimeout(() => setError(""), 3000);
+      return;
+    }
 
-  const days = Array.from({ length: 31 }, (_, i) => {
-    const day = (i + 1).toString().padStart(2, "0");
-    return day;
-  });
+    if (!formData.categoryId) {
+      setError("Category is required");
+      setTimeout(() => setError(""), 3000);
+      return;
+    }
+
+    try {
+      await createBook(formData);
+      setSuccess(true);
+
+      setFormData({
+        name: "",
+        description: "",
+        image: "",
+        price: 0,
+        stock: 0,
+        categoryId: "",
+      });
+
+      setTimeout(() => {
+        setSuccess(false);
+        // Optional: navigate("/books")
+      }, 2000);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setError("Failed to create book. Please try again.");
+      setTimeout(() => setError(""), 3000);
+    }
+  };
 
   return (
     <div
@@ -82,6 +122,31 @@ export default function AddBookScreen() {
         isMobile ? "m-0" : state === "expanded" ? "ml-60" : "ml-28"
       )}
     >
+      {success && (
+        <Alert
+          variant="default"
+          className="animate-fade-left-out bg-green-100 dark:bg-green-900/20 dark:text-green-400 border-green-600 border-l-4 border-t-0 border-b-0 border-r-0 mb-4 text-green-600 fixed top-4 right-4 z-[9999] w-80"
+        >
+          <CircleCheckBig color="#4ade80" size={15} />
+          <AlertTitle>Book Created Successfully</AlertTitle>
+          <AlertDescription>
+            You have successfully created a new book.
+          </AlertDescription>
+        </Alert>
+      )}
+      {/* Error Alert */}
+      {error && (
+        <Alert
+          variant="destructive"
+          className="animate-fade-left-out bg-red-100/85 dark:bg-red-900/45 dark:text-red-400 border-red-600 border-l-4 border-t-0 border-b-0 border-r-0 mb-4 text-red-600 fixed top-4 right-4 z-[9999] w-80"
+        >
+          <CircleAlert color="#ef4444" size={15} />
+          <AlertTitle>Error Creating Book</AlertTitle>
+          <AlertDescription>
+            please check your input and try again.
+          </AlertDescription>
+        </Alert>
+      )}
       <div className="pt-4">
         <Link to="/books" className="relative top-8 left-7">
           <ArrowLeft size={32} />
@@ -115,79 +180,32 @@ export default function AddBookScreen() {
       </div>
 
       {/* Add Book Form */}
-      <div className="w-[200%] ml-8 mt-8 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg p-6">
+      <div className="w-[200%] ml-8 mt-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-lg p-6">
         <form>
           <FieldGroup>
             <FieldSet>
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="name">Book Name</FieldLabel>
-                  <Input type="text" placeholder="add book name..." />
+                  <Input
+                    type="text"
+                    placeholder="add book name..."
+                    className=" dark:border-neutral-800 "
+                  />
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="description">Description</FieldLabel>
                   <Textarea
                     placeholder="add book description..."
+                    className="dark:border-neutral-800"
                     area-invalid
                   />
                 </Field>
-                <div className="grid grid-cols-3 gap-4">
-                  <Field>
-                    <FieldLabel>Month</FieldLabel>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="MM" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {months.map((month) => (
-                          <SelectItem key={month} value={month}>
-                            {month}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="checkout-7j9-exp-year-f59">
-                      Day
-                    </FieldLabel>
-                    <Select defaultValue="">
-                      <SelectTrigger id="checkout-7j9-exp-year-f59">
-                        <SelectValue placeholder="DD" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {days.map((day) => (
-                          <SelectItem key={day} value={day.toString()}>
-                            {day}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="checkout-7j9-exp-year-f59">
-                      Year
-                    </FieldLabel>
-                    <Select defaultValue="">
-                      <SelectTrigger id="checkout-7j9-exp-year-f59">
-                        <SelectValue placeholder="YYYY" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {years.map((year) => (
-                          <SelectItem key={year} value={year.toString()}>
-                            {year}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </Field>
-                </div>
               </FieldGroup>
             </FieldSet>
-            <FieldSeparator />
             <FieldSet>
               <FieldLegend>Upload image</FieldLegend>
-              <FieldGroup className="relative border-dashed border-2 border-neutral-300 dark:border-neutral-700 rounded-lg h-32 flex items-center justify-center cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors">
+              <FieldGroup className="relative border-dashed border-2 border-neutral-300 dark:border-neutral-800 rounded-lg h-32 flex items-center justify-center cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors">
                 <div className="text-center pointer-events-none">
                   <ImageUp className="mx-auto mb-2" />
                   <p className="text-sm text-neutral-500 dark:text-neutral-400">
@@ -208,13 +226,17 @@ export default function AddBookScreen() {
               <div className="grid grid-cols-2 space-x-2">
                 <Field>
                   <FieldLabel>Stock</FieldLabel>
-                  <Input type="text" placeholder="0" />
+                  <Input
+                    type="text"
+                    placeholder="0"
+                    className="dark:border-neutral-800"
+                  />
                 </Field>
 
                 <Field>
                   <FieldLabel>Category</FieldLabel>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="dark:border-neutral-800">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -231,16 +253,17 @@ export default function AddBookScreen() {
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="Price">Price</FieldLabel>
-                  <InputGroup>
+                  <InputGroup className="dark:border-neutral-800 outline-none dark:bg-black">
                     <InputGroupInput placeholder="0" />
                     <InputGroupAddon>IDR</InputGroupAddon>
-                    <InputGroupAddon align="inline-end"></InputGroupAddon>
                   </InputGroup>
                 </Field>
               </FieldGroup>
             </FieldSet>
             <Field orientation="horizontal">
-              <Button type="submit">Submit</Button>
+              <Button onClick={handleButtonSubmit} variant={"primary"}>
+                Submit
+              </Button>
               <Button variant="outline" type="button">
                 Cancel
               </Button>

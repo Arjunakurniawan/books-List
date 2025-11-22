@@ -21,15 +21,15 @@ export const getBooks = async () => {
 //   }
 // };
 
-// export const createBook = async (bookData: any) => {
-//   try {
-//     const response = await api.post("/books", bookData);
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error creating book:", error);
-//     throw error;
-//   }
-// };
+export const createBook = async () => {
+  try {
+    const response = await api.post<ApiResponse<BookResponse>>("/books/create");
+    return response.data.data;
+  } catch (error) {
+    console.error("Error creating book:", error);
+    throw error;
+  }
+};
 
 // export const updateBook = async (id: string, bookData: any) => {
 //   try {
