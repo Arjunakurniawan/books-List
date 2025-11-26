@@ -14,6 +14,7 @@ import {
   ImageUp,
   CircleCheckBig,
   CircleAlert,
+  X, // Tambahkan ini
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -60,6 +61,7 @@ export default function AddBookScreen() {
     categoryId: "",
   });
   const [error, setError] = useState("");
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -113,6 +115,51 @@ export default function AddBookScreen() {
       setError("Failed to create book. Please try again.");
       setTimeout(() => setError(""), 3000);
     }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validasi ukuran file (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        setError("File size must be less than 10MB");
+        setTimeout(() => setError(""), 3000);
+        return;
+      }
+
+      // Validasi tipe file
+      if (!file.type.startsWith("image/")) {
+        setError("File must be an image");
+        setTimeout(() => setError(""), 3000);
+        return;
+      }
+
+      // Buat preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+
+      // Simpan ke formData
+      setFormData((prev) => ({
+        ...prev,
+        image: file.name,
+      }));
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    setFormData((prev) => ({
+      ...prev,
+      image: "",
+    }));
+    // Reset input file
+    const fileInput = document.querySelector(
+      'input[type="file"]'
+    ) as HTMLInputElement;
+    if (fileInput) fileInput.value = "";
   };
 
   return (
@@ -206,19 +253,43 @@ export default function AddBookScreen() {
             <FieldSet>
               <FieldLegend>Upload image</FieldLegend>
               <FieldGroup className="relative border-dashed border-2 border-neutral-300 dark:border-neutral-800 rounded-lg h-32 flex items-center justify-center cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors">
-                <div className="text-center pointer-events-none">
-                  <ImageUp className="mx-auto mb-2" />
-                  <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                    Click to upload or drag and drop
-                  </p>
-                  <p className="text-xs text-neutral-400 dark:text-neutral-500">
-                    .png, .jpg up to 10MB
-                  </p>
-                </div>
-                <Input
-                  type="file"
-                  className="pointer absolute opacity-0 top-0 left-0 h-full w-full"
-                />
+                {imagePreview ? (
+                  // Preview Image dengan tombol X
+                  <div className="relative w-full h-full p-2 flex items-center justify-start">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="h-full object-contain rounded"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="absolute -top-1 -left-1 bg-blue-500/90 rounded-full hover:bg-blue-500 text-white p-1 transition-colors z-10"
+                      aria-label="Remove image"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
+                ) : (
+                  // Upload Placeholder
+                  <>
+                    <div className="text-center pointer-events-none">
+                      <ImageUp className="mx-auto mb-2" />
+                      <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                        Click to upload or drag and drop
+                      </p>
+                      <p className="text-xs text-neutral-400 dark:text-neutral-500">
+                        .png, .jpg up to 10MB
+                      </p>
+                    </div>
+                    <Input
+                      type="file"
+                      accept="image/png,image/jpeg,image/jpg"
+                      onChange={handleImageChange}
+                      className="pointer absolute opacity-0 top-0 left-0 h-full w-full cursor-pointer"
+                    />
+                  </>
+                )}
               </FieldGroup>
             </FieldSet>
 
