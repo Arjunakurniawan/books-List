@@ -11,20 +11,12 @@ import clsx from "clsx";
 import {
   SlashIcon,
   ArrowLeft,
-  ImageUp,
   CircleCheckBig,
   CircleAlert,
-  X, // Tambahkan ini
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSet,
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -42,7 +34,9 @@ import {
 } from "@/components/ui/input-group";
 import React, { useEffect, useState } from "react";
 import { getCategories } from "@/services/category";
-import type { BookResponse, CategoryResponse } from "@/types/ApiResponse.type";
+import type {
+  CategoryResponse,
+} from "@/types/ApiResponse.type";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { createBook } from "@/services/book";
 
@@ -61,7 +55,6 @@ export default function AddBookScreen() {
     categoryId: "",
   });
   const [error, setError] = useState("");
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -80,86 +73,26 @@ export default function AddBookScreen() {
   const handleButtonSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validasi
-    if (!formData.name.trim()) {
-      setError("Book name is required");
-      setTimeout(() => setError(""), 3000);
-      return;
-    }
-
-    if (!formData.categoryId) {
-      setError("Category is required");
-      setTimeout(() => setError(""), 3000);
-      return;
-    }
-
     try {
-      await createBook(formData);
-      setSuccess(true);
-
-      setFormData({
-        name: "",
-        description: "",
-        image: "",
-        price: 0,
-        stock: 0,
-        categoryId: "",
+      await createBook({
+        name: formData.name,
+        description: formData.description,
+        image: formData.image,
+        price: formData.price,
+        stock: formData.stock,
+        categoryId: formData.categoryId,
       });
+      setSuccess(true);
 
       setTimeout(() => {
         setSuccess(false);
-        // Optional: navigate("/books")
       }, 2000);
+
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("Error creating book:", error);
       setError("Failed to create book. Please try again.");
       setTimeout(() => setError(""), 3000);
     }
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Validasi ukuran file (max 10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        setError("File size must be less than 10MB");
-        setTimeout(() => setError(""), 3000);
-        return;
-      }
-
-      // Validasi tipe file
-      if (!file.type.startsWith("image/")) {
-        setError("File must be an image");
-        setTimeout(() => setError(""), 3000);
-        return;
-      }
-
-      // Buat preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-
-      // Simpan ke formData
-      setFormData((prev) => ({
-        ...prev,
-        image: file.name,
-      }));
-    }
-  };
-
-  const handleRemoveImage = () => {
-    setImagePreview(null);
-    setFormData((prev) => ({
-      ...prev,
-      image: "",
-    }));
-    // Reset input file
-    const fileInput = document.querySelector(
-      'input[type="file"]'
-    ) as HTMLInputElement;
-    if (fileInput) fileInput.value = "";
   };
 
   return (
@@ -238,6 +171,10 @@ export default function AddBookScreen() {
                     type="text"
                     placeholder="add book name..."
                     className=" dark:border-neutral-800 "
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                   />
                 </Field>
                 <Field>
@@ -246,51 +183,29 @@ export default function AddBookScreen() {
                     placeholder="add book description..."
                     className="dark:border-neutral-800"
                     area-invalid
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
                   />
                 </Field>
               </FieldGroup>
             </FieldSet>
+
+            {/* image url */}
             <FieldSet>
-              <FieldLegend>Upload image</FieldLegend>
-              <FieldGroup className="relative border-dashed border-2 border-neutral-300 dark:border-neutral-800 rounded-lg h-32 flex items-center justify-center cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors">
-                {imagePreview ? (
-                  // Preview Image dengan tombol X
-                  <div className="relative w-full h-full p-2 flex items-center justify-start">
-                    <img
-                      src={imagePreview}
-                      alt="Preview"
-                      className="h-full object-contain rounded"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleRemoveImage}
-                      className="absolute -top-1 -left-1 bg-blue-500/90 rounded-full hover:bg-blue-500 text-white p-1 transition-colors z-10"
-                      aria-label="Remove image"
-                    >
-                      <X className="h-5 w-5" />
-                    </button>
-                  </div>
-                ) : (
-                  // Upload Placeholder
-                  <>
-                    <div className="text-center pointer-events-none">
-                      <ImageUp className="mx-auto mb-2" />
-                      <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                        Click to upload or drag and drop
-                      </p>
-                      <p className="text-xs text-neutral-400 dark:text-neutral-500">
-                        .png, .jpg up to 10MB
-                      </p>
-                    </div>
-                    <Input
-                      type="file"
-                      accept="image/png,image/jpeg,image/jpg"
-                      onChange={handleImageChange}
-                      className="pointer absolute opacity-0 top-0 left-0 h-full w-full cursor-pointer"
-                    />
-                  </>
-                )}
-              </FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="imageUrl">Image URL</FieldLabel>
+                <Input
+                  type="text"
+                  placeholder="url"
+                  className="dark:border-neutral-800"
+                  value={formData.image}
+                  onChange={(e) =>
+                    setFormData({ ...formData, image: e.target.value })
+                  }
+                />
+              </Field>
             </FieldSet>
 
             <FieldSet>
@@ -301,18 +216,30 @@ export default function AddBookScreen() {
                     type="text"
                     placeholder="0"
                     className="dark:border-neutral-800"
+                    value={formData.stock}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        stock: Number(e.target.value),
+                      })
+                    }
                   />
                 </Field>
 
                 <Field>
                   <FieldLabel>Category</FieldLabel>
-                  <Select>
+                  <Select
+                    onValueChange={(value) => {
+                      console.log("Selected category:", value);
+                      setFormData({ ...formData, categoryId: value });
+                    }}
+                  >
                     <SelectTrigger className="dark:border-neutral-800">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
                       {category.map((cat) => (
-                        <SelectItem key={cat.name} value={cat.name}>
+                        <SelectItem key={cat.id} value={cat.id}>
                           {cat.name}
                         </SelectItem>
                       ))}
@@ -325,14 +252,28 @@ export default function AddBookScreen() {
                 <Field>
                   <FieldLabel htmlFor="Price">Price</FieldLabel>
                   <InputGroup className="dark:border-neutral-800 outline-none dark:bg-black">
-                    <InputGroupInput placeholder="0" />
+                    <InputGroupInput
+                      type="text"
+                      placeholder="0"
+                      value={formData.price}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          price: Number(e.target.value),
+                        })
+                      }
+                    />
                     <InputGroupAddon>IDR</InputGroupAddon>
                   </InputGroup>
                 </Field>
               </FieldGroup>
             </FieldSet>
             <Field orientation="horizontal">
-              <Button onClick={handleButtonSubmit} variant={"primary"}>
+              <Button
+                type="submit"
+                onClick={handleButtonSubmit}
+                variant={"primary"}
+              >
                 Submit
               </Button>
               <Button variant="outline" type="button">

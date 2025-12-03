@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Dashboard from "@/screens/dashboards/DashboardScreen";
 import BookScreen from "@/screens/books/BookScreen";
 import CategoryScreen from "@/screens/categories/CategoryScreen";
-import AddBookScreen from "@/screens/books/addBookScreen";
+import AddBookScreen from "@/screens/books/AddBookScreen";
 
 function RoutesApp() {
   return (

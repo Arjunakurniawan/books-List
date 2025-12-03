@@ -21,10 +21,13 @@ export const getBooks = async () => {
 //   }
 // };
 
-export const createBook = async () => {
+export const createBook = async (books: BookResponse) => {
   try {
-    const response = await api.post<ApiResponse<BookResponse>>("/books/create");
-    return response.data.data;
+    const response = await api.post<ApiResponse<BookResponse>>(
+      "/book/create",
+      books
+    );
+    return response.data;
   } catch (error) {
     console.error("Error creating book:", error);
     throw error;
@@ -41,12 +44,12 @@ export const createBook = async () => {
 //   }
 // };
 
-export const deleteBook = async (id: string) => {
-  try {
-    const response = await api.delete(`/books/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error deleting book with id ${id}:`, error);
-    throw error;
-  }
-};
+// export const deleteBook = async (id: string) => {
+//   try {
+//     const response = await api.delete(`/books/${id}`);
+//     return response.data;
+//   } catch (error) {
+//     console.error(`Error deleting book with id ${id}:`, error);
+//     throw error;
+//   }
+// };

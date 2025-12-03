@@ -19,11 +19,11 @@ export type BookResponse = {
   image: string;
   price: number;
   stock: number;
-  category: CategoryResponse | null;
+  categoryId: string;
 };
 
 export type CategoryResponse = {
-  id?: string | number;
+  id: string;
   name: string;
 };
 
