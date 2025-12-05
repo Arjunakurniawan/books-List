@@ -14,7 +14,7 @@ import {
   CircleCheckBig,
   CircleAlert,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -34,9 +34,7 @@ import {
 } from "@/components/ui/input-group";
 import React, { useEffect, useState } from "react";
 import { getCategories } from "@/services/category";
-import type {
-  CategoryResponse,
-} from "@/types/ApiResponse.type";
+import type { CategoryResponse } from "@/types/ApiResponse.type";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { createBook } from "@/services/book";
 
@@ -55,6 +53,7 @@ export default function AddBookScreen() {
     categoryId: "",
   });
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -86,8 +85,9 @@ export default function AddBookScreen() {
 
       setTimeout(() => {
         setSuccess(false);
+        navigate("/books");
       }, 2000);
-
+      
     } catch (error) {
       console.error("Error creating book:", error);
       setError("Failed to create book. Please try again.");

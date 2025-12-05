@@ -37,6 +37,16 @@ export const columns: ColumnDef<BookResponse>[] = [
   {
     accessorKey: "description",
     header: "Description",
+    cell({ row }) {
+      const description = row.getValue("description") as string;
+      return (
+        <span>
+          {description.length > 100
+            ? description.substring(0, 100) + "..."
+            : description}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "image",
@@ -70,11 +80,11 @@ export const columns: ColumnDef<BookResponse>[] = [
     accessorKey: "category",
     header: "Category",
     cell: ({ row }) => {
-      const rowData = row.original;
+      // const rowData = row.original;
       const category = row.getValue("category") as { name: string } | null;
 
       console.log("Category:", category);
-      console.log("CategoryName:", rowData.category?.name);
+      // console.log("CategoryName:", rowData.category?.name);
 
       return category?.name || "no category";
     },
