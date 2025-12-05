@@ -42,14 +42,12 @@ export default function CategoryTable() {
     refreshCategories();
   }, [refreshCategories]);
 
-  // Create columns with refresh callback
   const columns = createColumns(refreshCategories);
 
   const handleSubmit = async () => {
     if (!categoryName.trim()) {
       setError("Category name is required");
 
-      // Auto hide error after animation duration (3 seconds)
       setTimeout(() => {
         setError("");
       }, 3000);

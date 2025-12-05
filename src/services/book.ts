@@ -44,12 +44,12 @@ export const createBook = async (books: BookResponse) => {
 //   }
 // };
 
-// export const deleteBook = async (id: string) => {
-//   try {
-//     const response = await api.delete(`/books/${id}`);
-//     return response.data;
-//   } catch (error) {
-//     console.error(`Error deleting book with id ${id}:`, error);
-//     throw error;
-//   }
-// };
+export const deleteBook = async (id: string) => {
+  try {
+    const response = await api.delete(`/book/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting book with id ${id}:`, error);
+    throw error;
+  }
+};

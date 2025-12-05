@@ -87,7 +87,6 @@ export default function AddBookScreen() {
         setSuccess(false);
         navigate("/books");
       }, 2000);
-      
     } catch (error) {
       console.error("Error creating book:", error);
       setError("Failed to create book. Please try again.");
@@ -196,15 +195,19 @@ export default function AddBookScreen() {
             <FieldSet>
               <Field>
                 <FieldLabel htmlFor="imageUrl">Image URL</FieldLabel>
-                <Input
-                  type="text"
-                  placeholder="url"
-                  className="dark:border-neutral-800"
-                  value={formData.image}
-                  onChange={(e) =>
-                    setFormData({ ...formData, image: e.target.value })
-                  }
-                />
+                <InputGroup className="dark:border-neutral-800 outline-none dark:bg-black">
+                  <InputGroupInput
+                    type="text" 
+                    value={formData.image}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        image: e.target.value,
+                      })
+                    }
+                  />
+                  <InputGroupAddon>url</InputGroupAddon>
+                </InputGroup>
               </Field>
             </FieldSet>
 
@@ -229,10 +232,9 @@ export default function AddBookScreen() {
                 <Field>
                   <FieldLabel>Category</FieldLabel>
                   <Select
-                    onValueChange={(value) => {
-                      console.log("Selected category:", value);
-                      setFormData({ ...formData, categoryId: value });
-                    }}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, categoryId: value })
+                    }
                   >
                     <SelectTrigger className="dark:border-neutral-800">
                       <SelectValue placeholder="Select category" />

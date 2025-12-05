@@ -37,7 +37,7 @@ export default function BookTable() {
       </Link>
 
       <Input placeholder="Search books..." className="mb-4 w-80 float-right " />
-      <DataTable columns={columns} data={book} />
+      <DataTable columns={columns()} data={book} />
     </div>
   );
 }

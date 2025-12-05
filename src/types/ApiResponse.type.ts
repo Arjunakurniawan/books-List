@@ -23,7 +23,6 @@ export type BookResponse = {
 };
 
 export type CategoryResponse = {
-  id: string;
   name: string;
 };
 

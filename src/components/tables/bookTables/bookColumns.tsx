@@ -1,14 +1,14 @@
 import { Button } from "@/components/ui/button";
+import DeleteButton from "@/components/utils/DeleteButton";
+import { deleteBook } from "@/services/book";
 import type { BookResponse } from "@/types/ApiResponse.type";
 import { type ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowDownNarrowWide,
-  ArrowUpNarrowWide,
-  PenLine,
-  Trash,
-} from "lucide-react";
+import { ArrowDownNarrowWide, ArrowUpNarrowWide, PenLine } from "lucide-react";
 
-export const columns: ColumnDef<BookResponse>[] = [
+export const columns = (
+  onRefresh?: () => void,
+  onDelete?: () => void
+): ColumnDef<BookResponse>[] => [
   {
     accessorKey: "id",
     header: "No",
@@ -80,19 +80,14 @@ export const columns: ColumnDef<BookResponse>[] = [
     accessorKey: "category",
     header: "Category",
     cell: ({ row }) => {
-      // const rowData = row.original;
       const category = row.getValue("category") as { name: string } | null;
-
-      console.log("Category:", category);
-      // console.log("CategoryName:", rowData.category?.name);
-
       return category?.name || "no category";
     },
   },
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: () => (
+    cell: ({ row }) => (
       <div className="flex gap-2">
         <Button
           variant="outline"
@@ -102,14 +97,24 @@ export const columns: ColumnDef<BookResponse>[] = [
         >
           <PenLine className="w-4 h-4" />
         </Button>
-        <Button
+        <DeleteButton
+          itemId={row.original.id as string}
+          itemName={row.original.name}
+          deleteFunction={async (id: string) => {
+            await deleteBook(id);
+          }}
+          onRefresh={onRefresh}
+          onDelete={onDelete}
+        />
+
+        {/* <Button
           variant="outline"
           className="flex items-center gap-1 text-black dark:text-white px-2 py-1 rounded p-3 h-10"
           type="button"
           aria-label="Delete"
         >
           <Trash className="w-4 h-4" />
-        </Button>
+        </Button> */}
       </div>
     ),
   },
