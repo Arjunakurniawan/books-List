@@ -14,6 +14,7 @@ export type Category = {
 };
 
 export type BookResponse = {
+  id?: string;
   name: string;
   description: string;
   image: string;
@@ -23,6 +24,7 @@ export type BookResponse = {
 };
 
 export type CategoryResponse = {
+  id?: string;
   name: string;
 };
 

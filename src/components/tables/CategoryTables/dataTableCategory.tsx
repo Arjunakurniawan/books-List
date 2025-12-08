@@ -1,5 +1,5 @@
 import {
-type ColumnDef,
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -22,7 +22,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-export function DataTableCategory<TData, TValue>({
+export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {

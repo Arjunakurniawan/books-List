@@ -1,28 +1,30 @@
-import { columns } from "@/components/tables/bookTables/bookColumns";
 import { DataTable } from "@/components/tables/bookTables/dataTableBook";
 import type { BookResponse } from "@/types/ApiResponse.type";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getBooks } from "@/services/book";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
+import { createColumns } from "./bookColumns";
 
 export default function BookTable() {
   const [book, setBook] = useState<BookResponse[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getBooks();
-        setBook(response);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await getBooks();
+      setBook(response);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   }, []);
+
+  const columns = createColumns(fetchData);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
     <div className="py-10 px-16">
@@ -37,7 +39,7 @@ export default function BookTable() {
       </Link>
 
       <Input placeholder="Search books..." className="mb-4 w-80 float-right " />
-      <DataTable columns={columns()} data={book} />
+      <DataTable columns={columns} data={book} />
     </div>
   );
 }

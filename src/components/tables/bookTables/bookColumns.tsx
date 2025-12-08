@@ -5,7 +5,7 @@ import type { BookResponse } from "@/types/ApiResponse.type";
 import { type ColumnDef } from "@tanstack/react-table";
 import { ArrowDownNarrowWide, ArrowUpNarrowWide, PenLine } from "lucide-react";
 
-export const columns = (
+export const createColumns = (
   onRefresh?: () => void,
   onDelete?: () => void
 ): ColumnDef<BookResponse>[] => [
@@ -106,15 +106,6 @@ export const columns = (
           onRefresh={onRefresh}
           onDelete={onDelete}
         />
-
-        {/* <Button
-          variant="outline"
-          className="flex items-center gap-1 text-black dark:text-white px-2 py-1 rounded p-3 h-10"
-          type="button"
-          aria-label="Delete"
-        >
-          <Trash className="w-4 h-4" />
-        </Button> */}
       </div>
     ),
   },

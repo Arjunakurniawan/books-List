@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/pagination";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 

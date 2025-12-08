@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CircleAlert, CircleCheckBig, Plus } from "lucide-react";
-import { DataTableCategory } from "./dataTableCategory";
+import { DataTable } from "./dataTableCategory";
 import { createColumns } from "./CategoryColumns";
 import {
   Dialog,
@@ -194,7 +194,7 @@ export default function CategoryTable() {
           className="mb-4 w-80 float-right"
         />
       </div>
-      <DataTableCategory columns={columns} data={category} />
+      <DataTable columns={columns} data={category} />
     </div>
   );
 }
