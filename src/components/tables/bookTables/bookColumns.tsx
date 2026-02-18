@@ -1,14 +1,13 @@
 import { Button } from "@/components/ui/button";
-import DeleteButton from "@/components/utils/DeleteButton";
-import { deleteBook } from "@/services/book";
+// import DeleteButton from "@/components/utils/DeleteButton";
+// import { deleteBook } from "@/services/book";
 import type { BookResponse } from "@/types/ApiResponse.type";
 import { type ColumnDef } from "@tanstack/react-table";
 import { ArrowDownNarrowWide, ArrowUpNarrowWide, PenLine } from "lucide-react";
 
-export const createColumns = (
-  onRefresh?: () => void,
-  onDelete?: () => void
-): ColumnDef<BookResponse>[] => [
+export const createColumns = () // onRefresh?: () => void,
+// onDelete?: () => void
+: ColumnDef<BookResponse>[] => [
   {
     accessorKey: "id",
     header: "No",
@@ -87,7 +86,7 @@ export const createColumns = (
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => (
+    cell: () => (
       <div className="flex gap-2">
         <Button
           variant="outline"
@@ -97,7 +96,7 @@ export const createColumns = (
         >
           <PenLine className="w-4 h-4" />
         </Button>
-        <DeleteButton
+        {/* <DeleteButton
           itemId={row.original.id as string}
           itemName={row.original.name}
           deleteFunction={async (id: string) => {
@@ -105,7 +104,7 @@ export const createColumns = (
           }}
           onRefresh={onRefresh}
           onDelete={onDelete}
-        />
+        /> */}
       </div>
     ),
   },

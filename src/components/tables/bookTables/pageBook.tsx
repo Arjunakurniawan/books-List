@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/tables/bookTables/dataTableBook";
 import type { BookResponse } from "@/types/ApiResponse.type";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { getBooks } from "@/services/book";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,20 +11,20 @@ import { createColumns } from "./bookColumns";
 export default function BookTable() {
   const [book, setBook] = useState<BookResponse[]>([]);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
     try {
       const response = await getBooks();
       setBook(response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }, []);
-
-  const columns = createColumns(fetchData);
+  };
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, []);
+
+  const columns = useMemo(() => createColumns(), []);
 
   return (
     <div className="py-10 px-16">

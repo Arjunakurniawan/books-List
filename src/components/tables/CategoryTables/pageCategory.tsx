@@ -1,6 +1,10 @@
 import type { CategoryResponse } from "@/types/ApiResponse.type";
-import { useState, useEffect, useCallback } from "react";
-import { getCategories, createCategory } from "@/services/category";
+import { useState, useEffect } from "react";
+import {
+  getCategories,
+  createCategory,
+  deleteCategory,
+} from "@/services/category";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,7 +32,7 @@ export default function CategoryTable() {
   const [success, setSuccess] = useState(false);
 
   // Function to refresh categories data
-  const refreshCategories = useCallback(async () => {
+  const refreshCategories = async () => {
     try {
       const response = await getCategories();
       setCategory(response);
@@ -36,13 +40,11 @@ export default function CategoryTable() {
     } catch (error) {
       console.error("Error refreshing data:", error);
     }
-  }, []);
+  };
 
   useEffect(() => {
     refreshCategories();
-  }, [refreshCategories]);
-
-  const columns = createColumns(refreshCategories);
+  }, []);
 
   const handleSubmit = async () => {
     if (!categoryName.trim()) {
@@ -91,6 +93,19 @@ export default function CategoryTable() {
       setSuccess(false);
     }
   };
+
+  // handle delete function
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteCategory(id);
+      await refreshCategories();
+      alert("Category deleted successfully");
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
+  };
+
+  const columns = createColumns(handleDelete);
 
   return (
     <div className="py-10">
@@ -188,7 +203,6 @@ export default function CategoryTable() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-
         <Input
           placeholder="Search categories..."
           className="mb-4 w-80 float-right"

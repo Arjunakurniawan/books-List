@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { CircleCheckBig, Trash } from "lucide-react";
 import {
@@ -14,21 +14,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
-interface DeleteButtonProps {
-  itemId: string;
-  itemName: string;
-  onDelete?: () => void;
-  onRefresh?: () => void;
-  deleteFunction: (id: string) => Promise<void>;
-  title?: string;
-  description?: string;
-}
-
 const DeleteButton = ({
   itemId,
   itemName,
-  onDelete,
-  onRefresh,
   deleteFunction,
   title = "Delete Item",
   description,
@@ -38,7 +26,7 @@ const DeleteButton = ({
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     setIsDeleting(true);
     setSuccess(false);
     setError("");
@@ -51,7 +39,6 @@ const DeleteButton = ({
         onDelete();
       }
 
-      // Tutup dialog dan refresh data setelah 1.5 detik
       setTimeout(() => {
         setIsOpen(false);
         setSuccess(false);
@@ -62,11 +49,9 @@ const DeleteButton = ({
       }, 1000);
     } catch (error) {
       console.error("Error deleting item:", error);
-
       setSuccess(false);
       setError("Failed to delete item. Please try again.");
 
-      // Tutup dialog setelah 3 detik jika error
       setTimeout(() => {
         setError("");
         setIsOpen(false);
@@ -74,7 +59,7 @@ const DeleteButton = ({
     } finally {
       setIsDeleting(false);
     }
-  };
+  }, [itemId, deleteFunction, onDelete, onRefresh]);
 
   const defaultDescription = `Are you sure you want to delete "${itemName}"?`;
 

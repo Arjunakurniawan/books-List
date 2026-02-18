@@ -197,7 +197,7 @@ export default function AddBookScreen() {
                 <FieldLabel htmlFor="imageUrl">Image URL</FieldLabel>
                 <InputGroup className="dark:border-neutral-800 outline-none dark:bg-black">
                   <InputGroupInput
-                    type="text" 
+                    type="text"
                     value={formData.image}
                     onChange={(e) =>
                       setFormData({
@@ -241,7 +241,7 @@ export default function AddBookScreen() {
                     </SelectTrigger>
                     <SelectContent>
                       {category.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>
+                        <SelectItem key={cat.id} value={cat.id as string}>
                           {cat.name}
                         </SelectItem>
                       ))}
