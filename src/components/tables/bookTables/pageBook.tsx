@@ -1,7 +1,7 @@
 import { DataTable } from "@/components/tables/bookTables/dataTableBook";
 import type { BookResponse } from "@/types/ApiResponse.type";
-import { useState, useEffect, useMemo } from "react";
-import { getBooks } from "@/services/book";
+import { useState, useEffect } from "react";
+import { deleteBook, getBooks } from "@/services/book";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
@@ -24,7 +24,21 @@ export default function BookTable() {
     fetchData();
   }, []);
 
-  const columns = useMemo(() => createColumns(), []);
+  const handleDelete = async (id: string) => {
+    try {
+      const confirmed = window.confirm(
+        "Are you sure you want to delete this book?",
+      );
+      if (confirmed) {
+        await deleteBook(id);
+        await fetchData();
+      }
+    } catch (error) {
+      console.error("Error deleting book:", error);
+    }
+  };
+
+  const columns = createColumns(handleDelete);
 
   return (
     <div className="py-10 px-16">

@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-// import DeleteButton from "@/components/utils/DeleteButton";
-// import { deleteCategory } from "@/services/category";
 import type { CategoryResponse } from "@/types/ApiResponse.type";
 import { type ColumnDef } from "@tanstack/react-table";
 import {
@@ -42,6 +40,7 @@ export const createColumns = (
     accessorKey: "actions",
     header: "Actions",
     cell: ({ row }) => {
+
       const handleDelete = async () => {
         try {
           if (onDelete) {
@@ -64,22 +63,13 @@ export const createColumns = (
 
           <Button
             variant="outline"
-            className="flex items-center gap-1 text-red-500 border-red-500 hover:bg-red-500 hover:text-white px-2 py-1 rounded p-3 h-10"
+            className="flex items-center gap-1 text-black dark:text-white px-2 py-1 rounded p-3 h-10"
             type="button"
             aria-label="Delete"
             onClick={handleDelete}
           >
             <Trash className="w-4 h-4" />
           </Button>
-          {/* <DeleteButton
-            itemId={row.original.id as string}
-            itemName={row.original.name}
-            deleteFunction={async (id: string) => {
-              await deleteCategory(id);
-            }}
-            onRefresh={onRefresh}
-            onDelete={onDelete}
-          /> */}
         </div>
       );
     },

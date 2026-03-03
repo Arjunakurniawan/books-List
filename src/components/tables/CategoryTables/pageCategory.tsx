@@ -97,9 +97,13 @@ export default function CategoryTable() {
   // handle delete function
   const handleDelete = async (id: string) => {
     try {
-      await deleteCategory(id);
-      await refreshCategories();
-      alert("Category deleted successfully");
+      const confirmed = window.confirm(
+        "Are you sure you want to delete this category?",
+      );
+      if (confirmed) {
+        await deleteCategory(id);
+        await refreshCategories();
+      }
     } catch (error) {
       console.error("Error deleting category:", error);
     }

@@ -1,13 +1,16 @@
 import { Button } from "@/components/ui/button";
-// import DeleteButton from "@/components/utils/DeleteButton";
-// import { deleteBook } from "@/services/book";
 import type { BookResponse } from "@/types/ApiResponse.type";
 import { type ColumnDef } from "@tanstack/react-table";
-import { ArrowDownNarrowWide, ArrowUpNarrowWide, PenLine } from "lucide-react";
+import {
+  ArrowDownNarrowWide,
+  ArrowUpNarrowWide,
+  PenLine,
+  Trash,
+} from "lucide-react";
 
-export const createColumns = () // onRefresh?: () => void,
-// onDelete?: () => void
-: ColumnDef<BookResponse>[] => [
+export const createColumns = (
+  onDelete?: (id: string) => void,
+): ColumnDef<BookResponse>[] => [
   {
     accessorKey: "id",
     header: "No",
@@ -86,26 +89,37 @@ export const createColumns = () // onRefresh?: () => void,
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: () => (
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          className="flex items-center gap-1 text-black dark:text-white px-2 py-1 rounded p-3 h-10"
-          type="button"
-          aria-label="Edit"
-        >
-          <PenLine className="w-4 h-4" />
-        </Button>
-        {/* <DeleteButton
-          itemId={row.original.id as string}
-          itemName={row.original.name}
-          deleteFunction={async (id: string) => {
-            await deleteBook(id);
-          }}
-          onRefresh={onRefresh}
-          onDelete={onDelete}
-        /> */}
-      </div>
-    ),
+    cell: ({ row }) => {
+      const handleDelete = async () => {
+        try {
+          if (onDelete) {
+            await onDelete(row.original.id as string);
+          }
+        } catch (error) {
+          console.error("Error deleting book:", error);
+        }
+      };
+      return (
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            className="flex items-center gap-1 text-black dark:text-white px-2 py-1 rounded p-3 h-10"
+            type="button"
+            aria-label="Edit"
+          >
+            <PenLine className="w-4 h-4" />
+          </Button>
+          <Button
+            variant={"outline"}
+            className="flex items-center gap-1 text-black dark:text-white px-2 py-1 rounded p-3 h-10"
+            aria-label="Delete"
+            type="button"
+            onClick={handleDelete}
+          >
+            <Trash className="w-4 h-4" />
+          </Button>
+        </div>
+      );
+    },
   },
 ];
