@@ -3,9 +3,8 @@ import api from "./api/api";
 
 export const getCategories = async () => {
   try {
-    const response = await api.get<ApiResponse<CategoryResponse[]>>(
-      "/categories"
-    );
+    const response =
+      await api.get<ApiResponse<CategoryResponse[]>>("/categories");
     console.log("Fetched categories:", response.data);
     return response.data.data;
   } catch (error) {
@@ -19,7 +18,7 @@ export const createCategory = async (categoryData: CategoryResponse) => {
   try {
     const response = await api.post<ApiResponse<CategoryResponse>>(
       "/category/create",
-      categoryData
+      categoryData,
     );
     console.log("Created category:", response.data);
     return response.data.data;
@@ -32,12 +31,25 @@ export const createCategory = async (categoryData: CategoryResponse) => {
 export const deleteCategory = async (categoryId: string) => {
   try {
     const response = await api.delete<ApiResponse<CategoryResponse>>(
-      `/category/${categoryId}`
+      `/category/${categoryId}`,
     );
-    console.log("Deleted category:", response.data);
+    console.log("success:", response.data);
     return response.data.data;
   } catch (error) {
-    console.error("Error deleting category:", error);
+    console.error("Response:", error);
+    throw error;
+  }
+};
+
+export const editCategory = async (categoryId: string) => {
+  try {
+    const response = await api.put<ApiResponse<CategoryResponse>>(
+      `/category/${categoryId}`,
+    );
+    console.log("success", response.data);
+    return response.data.data;
+  } catch (error) {
+    console.error("Response:", error);
     throw error;
   }
 };

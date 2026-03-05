@@ -98,7 +98,7 @@ export default function AddBookScreen() {
     <div
       className={clsx(
         "h-screen transition-all duration-300 mt-12",
-        isMobile ? "m-0" : state === "expanded" ? "ml-60" : "ml-28"
+        isMobile ? "m-0" : state === "expanded" ? "ml-60" : "ml-28",
       )}
     >
       {success && (
@@ -216,16 +216,15 @@ export default function AddBookScreen() {
                 <Field>
                   <FieldLabel>Stock</FieldLabel>
                   <Input
-                    type="text"
-                    placeholder="0"
+                    type="number"
                     className="dark:border-neutral-800"
                     value={formData.stock}
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setFormData({
                         ...formData,
                         stock: Number(e.target.value),
-                      })
-                    }
+                      });
+                    }}
                   />
                 </Field>
 
@@ -255,7 +254,7 @@ export default function AddBookScreen() {
                   <FieldLabel htmlFor="Price">Price</FieldLabel>
                   <InputGroup className="dark:border-neutral-800 outline-none dark:bg-black">
                     <InputGroupInput
-                      type="text"
+                      type="number"
                       placeholder="0"
                       value={formData.price}
                       onChange={(e) =>
