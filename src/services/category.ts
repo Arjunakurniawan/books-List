@@ -41,10 +41,14 @@ export const deleteCategory = async (categoryId: string) => {
   }
 };
 
-export const editCategory = async (categoryId: string) => {
+export const editCategory = async (
+  categoryId: string,
+  categoryData: { name: string },
+) => {
   try {
     const response = await api.put<ApiResponse<CategoryResponse>>(
       `/category/${categoryId}`,
+      categoryData,
     );
     console.log("success", response.data);
     return response.data.data;

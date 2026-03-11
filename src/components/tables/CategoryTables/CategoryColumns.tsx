@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { editCategory } from "@/services/category";
 import type { CategoryResponse } from "@/types/ApiResponse.type";
 import { type ColumnDef } from "@tanstack/react-table";
 import {
@@ -19,10 +20,11 @@ import {
   Trash,
 } from "lucide-react";
 import { useState } from "react";
-import { Link, Links } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const createColumns = (
   onDelete?: (id: string) => void,
+  onrefresh?: () => void,
 ): ColumnDef<CategoryResponse>[] => [
   {
     accessorKey: "id",
@@ -66,6 +68,29 @@ export const createColumns = (
         }
       };
 
+      const handleSubmit = async () => {
+        if (!categoryName.trim()) {
+          alert("Category name is required");
+          return;
+        }
+
+        try {
+          await editCategory(row.original.id as string, {
+            name: categoryName,
+          });
+          alert("Category edited successfully");
+
+          if (onrefresh) {
+            onrefresh();
+          }
+
+          setDialogOpen(false);
+          
+        } catch (error) {
+          console.error("Error editing category:", error);
+        }
+      };
+
       return (
         <>
           <div className="flex gap-2">
@@ -94,9 +119,7 @@ export const createColumns = (
               <DialogContent className="sm:max-w-[425px] dark:bg-neutral-950 border dark:border-neutral-800">
                 <DialogHeader>
                   <DialogTitle>Edit Category</DialogTitle>
-                  <DialogDescription>
-                    Edit an existing category
-                  </DialogDescription>
+                  <DialogDescription>Edit a new category</DialogDescription>
                 </DialogHeader>
 
                 <div className="grid gap-4 py-4">
@@ -109,10 +132,9 @@ export const createColumns = (
                       value={categoryName}
                       onChange={(e) => setCategoryName(e.target.value)}
                       className="col-span-4 border border-neutral-800 outline-none dark:focus-visible:border-blue-800"
-                      // disabled={loading || success}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                          // handleSubmit();
+                          handleSubmit();
                         }
                       }}
                     />
@@ -130,10 +152,7 @@ export const createColumns = (
                       Cancel
                     </Button>
                   </Link>
-                  <Button
-                    onClick={() => setDialogOpen(false)}
-                    className="gap-2"
-                  >
+                  <Button onClick={handleSubmit} className="gap-2">
                     <Plus className="h-4 w-4" />
                     Create Category
                   </Button>

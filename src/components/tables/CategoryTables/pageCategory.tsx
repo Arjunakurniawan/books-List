@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/dialog";
 import { Link } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import EditCategoryScreen from "@/screens/categories/EditCategoryScreen";
 
 export default function CategoryTable() {
   const [category, setCategory] = useState<CategoryResponse[]>([]);
@@ -31,10 +30,6 @@ export default function CategoryTable() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  // const [editDialogOpen, setEditDialogOpen] = useState(false);
-  // const [selectedCategory, setSelectedCategory] = useState<
-  //   CategoryResponse | undefined
-  // >();
 
   // Function to refresh categories data
   const refreshCategories = async () => {
@@ -71,8 +66,6 @@ export default function CategoryTable() {
 
       setSuccess(true);
       setCategoryName("");
-
-      await refreshCategories();
 
       setTimeout(() => {
         setDialogOpen(false);
@@ -114,13 +107,8 @@ export default function CategoryTable() {
     }
   };
 
-  // const handleEdit = (category: CategoryResponse) => {
-  //   setSelectedCategory(category);
-  //   setEditDialogOpen(true);
-  // };
-
   //create columns with delete and edit action
-  const columns = createColumns(handleDelete);
+  const columns = createColumns(handleDelete, refreshCategories);
 
   return (
     <div className="py-10">

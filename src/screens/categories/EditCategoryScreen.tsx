@@ -20,10 +20,8 @@ import { getCategories } from "@/services/category";
 import type { CategoryResponse } from "@/types/ApiResponse.type";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-
 interface EditCategoryScreenProps {
   category: CategoryResponse;
-  
 }
 
 export function EditCategoryScreen({ category }: EditCategoryScreenProps) {
