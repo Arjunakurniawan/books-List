@@ -14,7 +14,7 @@ import {
   CircleCheckBig,
   CircleAlert,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -33,15 +33,16 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import React, { useEffect, useState } from "react";
-import { getCategories } from "@/services/category";
 import type { CategoryResponse } from "@/types/ApiResponse.type";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { createBook } from "@/services/book";
+import { getBookById } from "@/services/book";
+import { getCategories } from "@/services/category";
 
-export default function AddBookScreen() {
+export default function EditBookScreen() {
   const isMobile = useIsMobile();
   const { state } = useSidebar();
 
+  const { id } = useParams<{ id: string }>();
 
   const [category, setCategory] = useState<CategoryResponse[]>([]);
   const [success, setSuccess] = useState(false);
@@ -57,32 +58,44 @@ export default function AddBookScreen() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchBookData = async () => {
       try {
-        const response = await getCategories();
-        setCategory(response);
+        const categoriesData = await getCategories();
+        setCategory(categoriesData);
+
+        if (id) {
+          const bookData = await getBookById(id as string);
+          setFormData({
+            name: bookData.name,
+            description: bookData.description,
+            image: bookData.image,
+            price: bookData.price,
+            stock: bookData.stock,
+            categoryId: bookData.categoryId,
+          });
+        }
       } catch (error) {
-        setError("Failed Creating Book");
-        console.error("Error Creating Book:", error);
+        console.error("Error fetching book data:", error);
+        setError("Failed to fetch book data. Please try again.");
+        setTimeout(() => setError(""), 3000);
       }
     };
 
-    fetchCategories();
-  }, []);
+    fetchBookData();
+  }, [id]);
 
   const handleButtonSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      await createBook({
-        name: formData.name,
-        description: formData.description,
-        image: formData.image,
-        price: formData.price,
-        stock: formData.stock,
-        categoryId: formData.categoryId,
+      setFormData({
+        name: bookData.name,
+        description: bookData.description,
+        image: bookData.image,
+        price: bookData.price,
+        stock: bookData.stock,
+        categoryId: bookData.categoryId,
       });
-
       setSuccess(true);
 
       setTimeout(() => {
@@ -122,17 +135,15 @@ export default function AddBookScreen() {
           className="animate-fade-left-out bg-red-100/85 dark:bg-red-900/45 dark:text-red-400 border-red-600 border-l-4 border-t-0 border-b-0 border-r-0 mb-4 text-red-600 fixed top-4 right-4 z-[9999] w-80"
         >
           <CircleAlert color="#ef4444" size={15} />
-          <AlertTitle>Error Creating Book</AlertTitle>
-          <AlertDescription>
-            please check your input and try again.
-          </AlertDescription>
+          <AlertTitle>Error fetching book data</AlertTitle>
+          <AlertDescription>please try again later.</AlertDescription>
         </Alert>
       )}
       <div className="pt-4">
         <Link to="/books" className="relative top-8 left-7">
           <ArrowLeft size={32} />
         </Link>
-        <h1 className="text-4xl pl-20">New Book.</h1>
+        <h1 className="text-4xl pl-20">Edit Book.</h1>
         <Breadcrumb className="pt-8 pl-8">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -213,6 +224,7 @@ export default function AddBookScreen() {
               </Field>
             </FieldSet>
 
+            {/* image input */}
             <FieldSet>
               <div className="grid grid-cols-2 space-x-2">
                 <Field>
@@ -230,9 +242,11 @@ export default function AddBookScreen() {
                   />
                 </Field>
 
+                {/* category input */}
                 <Field>
                   <FieldLabel>Category</FieldLabel>
                   <Select
+                    value={formData.categoryId}
                     onValueChange={(value) =>
                       setFormData({ ...formData, categoryId: value })
                     }

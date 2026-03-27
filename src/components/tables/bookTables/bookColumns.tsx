@@ -7,6 +7,7 @@ import {
   PenLine,
   Trash,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const createColumns = (
   onDelete?: (id: string) => void,
@@ -101,14 +102,16 @@ export const createColumns = (
       };
       return (
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            className="flex items-center gap-1 text-black dark:text-white px-2 py-1 rounded p-3 h-10"
-            type="button"
-            aria-label="Edit"
-          >
-            <PenLine className="w-4 h-4" />
-          </Button>
+          <Link to={"/book/edit/" + row.original.id}>
+            <Button
+              variant="outline"
+              className="flex items-center gap-1 text-black dark:text-white px-2 py-1 rounded p-3 h-10"
+              type="button"
+              aria-label="Edit"
+            >
+              <PenLine className="w-4 h-4" />
+            </Button>
+          </Link>
           <Button
             variant={"outline"}
             className="flex items-center gap-1 text-black dark:text-white px-2 py-1 rounded p-3 h-10"

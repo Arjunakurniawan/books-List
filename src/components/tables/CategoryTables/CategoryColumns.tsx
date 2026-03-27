@@ -20,7 +20,7 @@ import {
   Trash,
 } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const createColumns = (
   onDelete?: (id: string) => void,
@@ -59,7 +59,7 @@ export const createColumns = (
       const [categoryName, setCategoryName] = useState(row.original.name);
 
       const handleDelete = async () => {
-        try {
+      try {
           if (onDelete) {
             await onDelete(row.original.id as string);
           }
@@ -85,7 +85,6 @@ export const createColumns = (
           }
 
           setDialogOpen(false);
-          
         } catch (error) {
           console.error("Error editing category:", error);
         }

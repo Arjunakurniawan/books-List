@@ -3,6 +3,7 @@ import Dashboard from "@/screens/dashboards/DashboardScreen";
 import BookScreen from "@/screens/books/BookScreen";
 import CategoryScreen from "@/screens/categories/CategoryScreen";
 import AddBookScreen from "@/screens/books/AddBookScreen";
+import EditBookScreen from "@/screens/books/EditBookScreen";
 
 function RoutesApp() {
   return (
@@ -10,9 +11,9 @@ function RoutesApp() {
       <Route path="/" element={<Dashboard />} />
       <Route path="/books" element={<BookScreen />} />
       <Route path="/book/create" element={<AddBookScreen />} />
-
+      <Route path="/book/edit/:id" element={<EditBookScreen />} />
       <Route path="/categories" element={<CategoryScreen />} />
-      <Route path="/category/create" element={<CategoryScreen />} />
+      <Route path="/category/create" element={<CategoryScreen />} />\
     </Routes>
   );
 }

@@ -11,21 +11,21 @@ export const getBooks = async () => {
   }
 };
 
-// export const getBookById = async (id: string) => {
-//   try {
-//     const response = await api.get(`/books/${id}`);
-//     return response.data;
-//   } catch (error) {
-//     console.error(`Error fetching book with id ${id}:`, error);
-//     throw error;
-//   }
-// };
+export const getBookById = async (id: string) => {
+  try {
+    const response = await api.get<ApiResponse<BookResponse>>(`/book/${id}`);
+    return response.data.data;
+  } catch (error) {
+    console.error(`Error fetching book with id ${id}:`, error);
+    throw error;
+  }
+};
 
 export const createBook = async (books: BookResponse) => {
   try {
     const response = await api.post<ApiResponse<BookResponse>>(
       "/book/create",
-      books
+      books,
     );
     return response.data;
   } catch (error) {
@@ -34,15 +34,25 @@ export const createBook = async (books: BookResponse) => {
   }
 };
 
-// export const updateBook = async (id: string, bookData: any) => {
-//   try {
-//     const response = await api.put(`/books/${id}`, bookData);
-//     return response.data;
-//   } catch (error) {
-//     console.error(`Error updating book with id ${id}:`, error);
-//     throw error;
-//   }
-// };
+export const editBook = async (
+  id: string,
+  bookData: {
+    name: string;
+    description: string;
+    image: string;
+    price: number;
+    stock: number;
+    categoryId: string;
+  },
+) => {
+  try {
+    const response = await api.put(`/book/${id}`, bookData);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating book with id ${id}:`, error);
+    throw error;
+  }
+};
 
 export const deleteBook = async (id: string) => {
   try {
