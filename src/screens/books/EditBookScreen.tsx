@@ -35,7 +35,7 @@ import {
 import React, { useEffect, useState } from "react";
 import type { CategoryResponse } from "@/types/ApiResponse.type";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getBookById } from "@/services/book";
+import { editBook, getBookById } from "@/services/book";
 import { getCategories } from "@/services/category";
 
 export default function EditBookScreen() {
@@ -88,13 +88,13 @@ export default function EditBookScreen() {
     e.preventDefault();
 
     try {
-      setFormData({
-        name: bookData.name,
-        description: bookData.description,
-        image: bookData.image,
-        price: bookData.price,
-        stock: bookData.stock,
-        categoryId: bookData.categoryId,
+      await editBook(id as string, {
+        name: formData.name,
+        description: formData.description,
+        image: formData.image,
+        price: formData.price,
+        stock: formData.stock,
+        categoryId: formData.categoryId,
       });
       setSuccess(true);
 
@@ -103,7 +103,7 @@ export default function EditBookScreen() {
         navigate("/books");
       }, 2000);
     } catch (error) {
-      console.error("Error creating book:", error);
+      console.error("error creating", error);
       setError("Failed to create book. Please try again.");
       setTimeout(() => setError(""), 3000);
     }
