@@ -1,10 +1,16 @@
 import type { ApiResponse, BookResponse } from "@/types/ApiResponse.type";
 import api from "./api/api";
 
-export const getBooks = async () => {
+export const getBooks = async (page: number = 1, limit: number = 10) => {
   try {
-    const response = await api.get<ApiResponse<BookResponse[]>>("/books");
-    return response.data.data;
+    const response = await api.get<ApiResponse<BookResponse[]>>(
+      `/books?page=${page}&limit=${limit}`,
+    );
+    return {
+      data: response.data.data,
+      total: response.data.total,
+      pagination: response.data.pagination,
+    };
   } catch (error) {
     console.error("Error fetching books:", error);
     throw error;

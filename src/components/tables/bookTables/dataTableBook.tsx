@@ -2,10 +2,10 @@ import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import clsx from "clsx";
-import { useState, useMemo } from "react";
 
 import {
   Table,
@@ -28,50 +28,61 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  currentPage: number;
+  pageSize: number;
+  total: number;
+  onPageChange: (page: number) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  currentPage,
+  pageSize,
+  total,
+  onPageChange,
 }: DataTableProps<TData, TValue>) {
-  const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 20;
+  // const [currentPage, setCurrentPage] = useState(0);
+  // const pageSize = 20;
 
-  const totalPages = Math.ceil(data.length / pageSize);
+  const totalPages = Math.ceil(total / pageSize);
 
-  const startIndex = currentPage * pageSize;
-  const endIndex = startIndex + pageSize;
-  const paginatedData = useMemo(
-    () => data.slice(startIndex, endIndex),
-    [data, startIndex, endIndex],
-  );
+  // const startIndex = currentPage * pageSize;
+  // const endIndex = startIndex + pageSize;
+  // const paginatedData = useMemo(
+  //   () => data.slice(startIndex, endIndex),
+  //   [data, startIndex, endIndex],
+  // );
 
   const table = useReactTable({
-    data: paginatedData,
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   const isMobile = useIsMobile();
 
-  const goToPage = (page: number) => {
-    setCurrentPage(page);
-  };
-
   const nextPage = () => {
-    if (currentPage < totalPages - 1) {
-      setCurrentPage(currentPage + 1);
+    if (currentPage < totalPages) {
+      onPageChange(currentPage + 1);
     }
   };
 
   const previousPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
     }
   };
 
-  const canPreviousPage = currentPage > 0;
-  const canNextPage = currentPage < totalPages - 1;
+  const goToPage = (page: number) => {
+    if (page > 0 && page <= totalPages) {
+      onPageChange(page);
+    }
+  };
+
+  const canPreviousPage = currentPage > 1;
+  const canNextPage = currentPage < totalPages;
 
   if (isMobile) {
     return (
@@ -160,7 +171,7 @@ export function DataTable<TData, TValue>({
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id} className="dark:text-gray-200 px-4">
                     {cell.column.id === "id"
-                      ? startIndex + idx + 1 // tambahkan startIndex
+                      ? (currentPage - 1) * pageSize + idx + 1
                       : flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext(),
@@ -193,8 +204,8 @@ export function DataTable<TData, TValue>({
             {Array.from({ length: totalPages }).map((_, i) => (
               <PaginationItem key={i}>
                 <PaginationLink
-                  isActive={currentPage === i}
-                  onClick={() => goToPage(i)}
+                  isActive={currentPage === i + 1}
+                  onClick={() => goToPage(i + 1)}
                 >
                   {i + 1}
                 </PaginationLink>

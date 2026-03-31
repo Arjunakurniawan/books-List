@@ -122,9 +122,9 @@ export default function EditBookScreen() {
           className="animate-fade-left-out bg-green-100 dark:bg-green-900/20 dark:text-green-400 border-green-600 border-l-4 border-t-0 border-b-0 border-r-0 mb-4 text-green-600 fixed top-4 right-4 z-[9999] w-80"
         >
           <CircleCheckBig color="#4ade80" size={15} />
-          <AlertTitle>Book Created Successfully</AlertTitle>
+          <AlertTitle>Edit Successfull</AlertTitle>
           <AlertDescription>
-            You have successfully created a new book.
+            You have successfully edit a book.
           </AlertDescription>
         </Alert>
       )}
@@ -135,7 +135,7 @@ export default function EditBookScreen() {
           className="animate-fade-left-out bg-red-100/85 dark:bg-red-900/45 dark:text-red-400 border-red-600 border-l-4 border-t-0 border-b-0 border-r-0 mb-4 text-red-600 fixed top-4 right-4 z-[9999] w-80"
         >
           <CircleAlert color="#ef4444" size={15} />
-          <AlertTitle>Error fetching book data</AlertTitle>
+          <AlertTitle>Error edit book</AlertTitle>
           <AlertDescription>please try again later.</AlertDescription>
         </Alert>
       )}

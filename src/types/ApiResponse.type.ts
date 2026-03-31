@@ -31,4 +31,9 @@ export type CategoryResponse = {
 export type ApiResponse<T> = {
   data: T;
   message: string | null;
+  total: number;
+  pagination?: {
+    page: number;
+    limit: number;
+  };
 };

@@ -10,11 +10,16 @@ import { createColumns } from "./bookColumns";
 
 export default function BookTable() {
   const [book, setBook] = useState<BookResponse[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
+  const [total, setTotal] = useState(0);
 
-  const fetchData = async () => {
+  const fetchData = async (page: number = 1) => {
     try {
-      const response = await getBooks();
-      setBook(response);
+      const response = await getBooks(page, pageSize);
+      setBook(response.data);
+      setTotal(response.total);
+      setCurrentPage(page);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -31,7 +36,7 @@ export default function BookTable() {
       );
       if (confirmed) {
         await deleteBook(id);
-        await fetchData();
+        await fetchData(currentPage);
       }
     } catch (error) {
       console.error("Error deleting book:", error);
@@ -53,7 +58,14 @@ export default function BookTable() {
       </Link>
 
       <Input placeholder="Search books..." className="mb-4 w-80 float-right " />
-      <DataTable columns={columns} data={book} />
+      <DataTable
+        columns={columns}
+        data={book}
+        currentPage={currentPage}
+        total={total}
+        pageSize={pageSize}
+        onPageChange={fetchData}
+      />
     </div>
   );
 }
