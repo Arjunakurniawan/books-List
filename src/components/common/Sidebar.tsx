@@ -41,14 +41,14 @@ function Sidebar() {
     <aside
       className={clsx(
         "fixed left-0 top-0 z-40 h-screen bg-neutral-900 font-sans transition-all duration-300 text-black",
-        state === "expanded" ? "w-60" : "w-28"
+        state === "expanded" ? "w-60" : "w-28",
       )}
     >
       <div className="flex items-center justify-between p-4">
         <h1
           className={clsx(
             "text-2xl pt-4 pl-5 pr-32 font-bold text-white",
-            state === "collapsed" && "hidden"
+            state === "collapsed" && "hidden",
           )}
         >
           Books.
@@ -75,7 +75,7 @@ function Sidebar() {
                   <Link to={path}>
                     <Button
                       className={clsx(
-                        "bg-neutral-900 w-full h-12 justify-start gap-4 font-normal my-1 hover:bg-neutral-800 dark:text-white"
+                        "bg-neutral-900 w-full h-12 justify-start gap-4 font-normal my-1 hover:bg-neutral-800 dark:text-white",
                       )}
                     >
                       <Icon size={24} />
@@ -105,7 +105,7 @@ function Sidebar() {
               <TooltipTrigger asChild>
                 <Button
                   className={clsx(
-                    "bg-neutral-900 w-full h-12 justify-start gap-4 font-normal my-1 hover:bg-neutral-800 dark:text-white"
+                    "bg-neutral-900 w-full h-12 justify-start gap-4 font-normal my-1 hover:bg-neutral-800 dark:text-white",
                   )}
                 >
                   <Icon size={24} />

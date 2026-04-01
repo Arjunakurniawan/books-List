@@ -42,17 +42,8 @@ export function DataTable<TData, TValue>({
   total,
   onPageChange,
 }: DataTableProps<TData, TValue>) {
-  // const [currentPage, setCurrentPage] = useState(0);
-  // const pageSize = 20;
 
   const totalPages = Math.ceil(total / pageSize);
-
-  // const startIndex = currentPage * pageSize;
-  // const endIndex = startIndex + pageSize;
-  // const paginatedData = useMemo(
-  //   () => data.slice(startIndex, endIndex),
-  //   [data, startIndex, endIndex],
-  // );
 
   const table = useReactTable({
     data,

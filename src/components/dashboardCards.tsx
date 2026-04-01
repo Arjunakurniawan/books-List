@@ -26,7 +26,7 @@ export default function DashboardCards() {
           getBooks(),
           getCategories(),
         ]);
-        setBooksCount(booksResponse.length);
+        setBooksCount(booksResponse.total);
         setCategoriesCount(categoriesResponse.length);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);

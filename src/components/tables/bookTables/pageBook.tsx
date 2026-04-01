@@ -10,14 +10,17 @@ import { createColumns } from "./bookColumns";
 
 export default function BookTable() {
   const [book, setBook] = useState<BookResponse[]>([]);
+  const [bookData, setBookData] = useState<BookResponse[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [total, setTotal] = useState(0);
+  const [searchItem, setSearchItem] = useState("");
 
   const fetchData = async (page: number = 1) => {
     try {
       const response = await getBooks(page, pageSize);
       setBook(response.data);
+      setBookData(response.data);
       setTotal(response.total);
       setCurrentPage(page);
     } catch (error) {
@@ -43,6 +46,17 @@ export default function BookTable() {
     }
   };
 
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = e.target.value;
+
+    const filteredBooks = bookData.filter((book) =>
+      book.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+    setBook(filteredBooks);
+    setSearchItem(searchTerm);
+    setCurrentPage(1);
+  };
+
   const columns = createColumns(handleDelete);
 
   return (
@@ -57,7 +71,12 @@ export default function BookTable() {
         </Button>
       </Link>
 
-      <Input placeholder="Search books..." className="mb-4 w-80 float-right " />
+      <Input
+        placeholder="Search books..."
+        className="mb-4 w-80 float-right "
+        value={searchItem}
+        onChange={handleInputChange}
+      />
       <DataTable
         columns={columns}
         data={book}
