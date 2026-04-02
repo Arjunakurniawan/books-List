@@ -1,5 +1,6 @@
 import Sidebar from "./components/common/Sidebar";
 import TopBar from "./components/common/TopBar";
+import MobileNav from "./components/common/MobileNav";
 import { ThemeProvider } from "./components/theme-provider";
 import { SidebarProvider } from "./components/ui/sidebar";
 import RoutesApp from "./routes/route";
@@ -12,7 +13,8 @@ function App() {
           <Sidebar />
           <div className="flex flex-col flex-1">
             <TopBar />
-            <main>
+            <MobileNav />
+            <main className="pt-16">
               <RoutesApp />
             </main>
           </div>

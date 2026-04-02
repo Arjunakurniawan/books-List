@@ -47,7 +47,7 @@ function BookScreen() {
             <BreadcrumbEllipsis />
           </BreadcrumbList>
         </Breadcrumb>
-        <BookTable />
+      <BookTable />
       </div>
     </div>
   );
