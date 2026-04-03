@@ -42,7 +42,6 @@ export function DataTable<TData, TValue>({
   total,
   onPageChange,
 }: DataTableProps<TData, TValue>) {
-
   const totalPages = Math.ceil(total / pageSize);
 
   const table = useReactTable({
@@ -98,7 +97,7 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+            table.getRowModel().rows.map((row, idx) => (
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
@@ -106,7 +105,12 @@ export function DataTable<TData, TValue>({
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id} className="dark:text-gray-200">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {cell.column.id === "id"
+                      ? (currentPage - 1) * pageSize + idx + 1
+                      : flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
                   </TableCell>
                 ))}
               </TableRow>

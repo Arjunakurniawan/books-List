@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X, Bell, Mail, LogOut } from "lucide-react";
+import { Menu, Bell, Mail, LogOut } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "../ui/sheet";
 import { ModeToggle } from "../mode-toggle";
@@ -16,7 +16,7 @@ function MobileNav() {
   ];
 
   return (
-    <header className="md:hidden flex items-center justify-between p-3 px-4 shadow-sm fixed top-0 left-0 right-0 z-20 bg-white dark:bg-neutral-950">
+    <header className="md:hidden flex items-center justify-between p-3 px-4 shadow-md fixed top-4 left-4 right-4 z-20 bg-white dark:bg-neutral-950 rounded-2xl">
       {/* Left - Hamburger */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
@@ -34,9 +34,7 @@ function MobileNav() {
                 variant="ghost"
                 size="icon"
                 className="dark:text-neutral-300"
-              >
-
-              </Button>
+              ></Button>
             </SheetClose>
           </div>
 
