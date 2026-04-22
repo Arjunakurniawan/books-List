@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -59,9 +60,9 @@ export const createColumns = (
       const [categoryName, setCategoryName] = useState(row.original.name);
 
       const handleDelete = async () => {
-      try {
+        try {
           if (onDelete) {
-            await onDelete(row.original.id as string);
+            onDelete(row.original.id as string);
           }
         } catch (error) {
           console.error("Error deleting category:", error);
@@ -140,7 +141,7 @@ export const createColumns = (
                   </div>
                 </div>
 
-                <DialogFooter>
+                <DialogFooter className="flex flex-row gap-3 justify-end">
                   <Link to="/categories">
                     <Button
                       type="button"

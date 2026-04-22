@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/tooltip";
 import { BiArrowBack, BiArrowFromLeft } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useSidebar } from "../ui/sidebar";
 
 const navItems = [
@@ -32,16 +31,14 @@ const settingItems = [
 ];
 
 function Sidebar() {
-  const { state, toggleSidebar } = useSidebar();
-  const isMobile = useIsMobile();
-
-  if (isMobile) return null;
+  const { state, toggleSidebar, isMobile } = useSidebar();
 
   return (
     <aside
       className={clsx(
-        "fixed  left-0 top-0 z-40 h-screen bg-neutral-900 font-sans transition-all duration-300 text-black",
-        isMobile && "hidden", state === "expanded" ? "w-60" : "w-28",
+        "fixed left-0 top-0 z-40 h-screen bg-neutral-900 font-sans transition-all duration-300 text-black",
+        state === "collapsed" ? "w-28" : "w-64",
+        isMobile && "hidden",
       )}
     >
       <div className="flex items-center justify-between p-4">

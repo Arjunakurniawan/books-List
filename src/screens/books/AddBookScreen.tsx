@@ -99,7 +99,7 @@ export default function AddBookScreen() {
   return (
     <div
       className={clsx(
-        "h-screen transition-all duration-300 mt-12",
+        "h-screen transition-all duration-300",
         isMobile ? "m-0" : state === "expanded" ? "ml-60" : "ml-28",
       )}
     >
@@ -128,12 +128,13 @@ export default function AddBookScreen() {
           </AlertDescription>
         </Alert>
       )}
-      <div className="pt-4">
-        <Link to="/books" className="relative top-8 left-7">
-          <ArrowLeft size={32} />
+
+      <div>
+        <Link to="/books" className="relative top-9 left-7">
+          <ArrowLeft size={35} className="hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-all duration-300 "/>
         </Link>
-        <h1 className="text-4xl pl-20">New Book.</h1>
-        <Breadcrumb className="pt-8 pl-8">
+        <h1 className="text-3xl pl-20">Add a new Book.</h1>
+        <Breadcrumb className="pt-8 pl-10">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
@@ -153,7 +154,7 @@ export default function AddBookScreen() {
             </BreadcrumbSeparator>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/book/create">New Book</Link>
+                <Link to="/book/create">new Book</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
           </BreadcrumbList>
@@ -161,7 +162,7 @@ export default function AddBookScreen() {
       </div>
 
       {/* Add Book Form */}
-      <div className="w-[200%] ml-8 mt-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-lg p-6">
+      <div className="w-[90%] ml-5 mt-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 lg:w-[50%]">
         <form>
           <FieldGroup>
             <FieldSet>
@@ -214,7 +215,7 @@ export default function AddBookScreen() {
             </FieldSet>
 
             <FieldSet>
-              <div className="grid grid-cols-2 space-x-2">
+              <div className="grid grid-cols-2 space-x-1">
                 <Field>
                   <FieldLabel>Stock</FieldLabel>
                   <Input

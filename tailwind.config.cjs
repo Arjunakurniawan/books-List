@@ -3,6 +3,11 @@ module.exports = {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    screens: {
+      sm: "480px",
+      md: "640px",
+      lg: "1024px",
+    },
     fontFamily: {
       sans: ["Poppins"],
     },

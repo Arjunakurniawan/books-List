@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Menu, Bell, Mail, LogOut } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "../ui/sheet";
-import { ModeToggle } from "../mode-toggle";
+import { ModeToggle } from "./mode-toggle";
 import avatar from "../../assets/images/kim jong un.jpg";
 import { Link } from "react-router-dom";
 
@@ -16,7 +16,7 @@ function MobileNav() {
   ];
 
   return (
-    <header className="md:hidden flex items-center justify-between p-3 px-4 shadow-md fixed top-4 left-4 right-4 z-20 bg-white dark:bg-neutral-950 rounded-2xl">
+    <header className="lg:hidden flex items-center justify-between p-3 px-4 shadow-md fixed top-4 left-4 right-4 z-20 bg-white dark:bg-neutral-950 rounded-2xl">
       {/* Left - Hamburger */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
@@ -28,7 +28,7 @@ function MobileNav() {
         <SheetContent side="left" className="w-64 dark:bg-neutral-950">
           {/* Header Drawer */}
           <div className="flex justify-between mb-8">
-            <h2 className="text-xl font-bold">Menu</h2>
+            <h2 className="text-xl font-bold">Books.</h2>
             <SheetClose asChild>
               <Button
                 variant="ghost"

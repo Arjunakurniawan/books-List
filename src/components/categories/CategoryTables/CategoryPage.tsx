@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CircleAlert, CircleCheckBig, Plus } from "lucide-react";
-import { DataTable } from "./dataTableCategory";
+import { DataTable } from "./CategoryDataTable";
 import { createColumns } from "./CategoryColumns";
 import {
   Dialog,
@@ -25,17 +25,20 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function CategoryTable() {
   const [category, setCategory] = useState<CategoryResponse[]>([]);
+  const [secondaryData, setSecondaryData] = useState<CategoryResponse[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [searchItem, setSearchItem] = useState("");
 
   // Function to refresh categories data
   const refreshCategories = async () => {
     try {
       const response = await getCategories();
       setCategory(response);
+      setSecondaryData(response);
       console.log("Refreshed categories:", response);
     } catch (error) {
       console.error("Error refreshing data:", error);
@@ -107,11 +110,22 @@ export default function CategoryTable() {
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = e.target.value;
+
+    const filteredCategories = secondaryData.filter((cat) =>
+      cat.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+
+    setCategory(filteredCategories);
+    setSearchItem(searchTerm);
+  };
+
   //create columns with delete and edit action
   const columns = createColumns(handleDelete, refreshCategories);
 
   return (
-    <div className="py-10">
+    <div className="py-10 px-2 lg:px-4">
       {/* Success Alert */}
       {success && (
         <Alert
@@ -137,78 +151,83 @@ export default function CategoryTable() {
         </Alert>
       )}
 
-      <div className="flex gap-96 relative">
-        <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
-          <DialogTrigger asChild>
-            <Link to="/category/create">
-              <Button
-                className="mb-4 text-blue-700 border-blue-700 hover:bg-blue-700 hover:text-white font-normal gap-2"
-                variant="outline"
-              >
-                <Plus className="h-4 w-4" />
-                Add Category
-              </Button>
-            </Link>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] dark:bg-neutral-950 border dark:border-neutral-800">
-            <DialogHeader>
-              <DialogTitle>Create New Category</DialogTitle>
-              <DialogDescription>Add a new category</DialogDescription>
-            </DialogHeader>
-
-            <div className="grid gap-4 py-4">
-              {/* Input Field */}
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="category-name" className="text-left">
-                  Name
-                </Label>
-                <Input
-                  id="category-name"
-                  placeholder="Enter category name"
-                  value={categoryName}
-                  onChange={(e) => setCategoryName(e.target.value)}
-                  className="col-span-4 border border-neutral-800 outline-none dark:focus-visible:border-blue-800"
-                  disabled={loading || success}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleSubmit();
-                    }
-                  }}
-                />
-              </div>
-            </div>
-
-            <DialogFooter>
-              <Link to="/categories">
+      <div className="flex flex-row gap-4 lg:gap-4 mb-4">
+        <div className="flex flex-row">
+          <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
+            <DialogTrigger asChild>
+              <Link to="/category/create">
                 <Button
-                  type="button"
+                  className="text-xs sm:text-sm text-blue-700 border-blue-700 hover:bg-blue-700 hover:text-white font-normal gap-1 sm:gap-2 px-2 py-1 sm:px-4 sm:py-2"
                   variant="outline"
-                  onClick={() => setDialogOpen(false)}
-                  disabled={loading || success}
-                  className="dark:bg-neutral-950 border dark:border-neutral-800"
                 >
-                  Cancel
+                  <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Add Category</span>
+                  <span className="sm:hidden">Add Category</span>
                 </Button>
               </Link>
-              <Button onClick={handleSubmit} className="gap-2">
-                {loading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Creating...
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-4 w-4" />
-                    Create Category
-                  </>
-                )}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px] dark:bg-neutral-950 border dark:border-neutral-800">
+              <DialogHeader>
+                <DialogTitle>Create New Category</DialogTitle>
+                <DialogDescription>Add a new category</DialogDescription>
+              </DialogHeader>
+
+              <div className="grid gap-4 py-4">
+                {/* Input Field */}
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="category-name" className="text-left">
+                    Name
+                  </Label>
+                  <Input
+                    id="category-name"
+                    placeholder="Enter category name"
+                    value={categoryName}
+                    onChange={(e) => setCategoryName(e.target.value)}
+                    className="col-span-4 border border-neutral-800 outline-none dark:focus-visible:border-blue-800"
+                    disabled={loading || success}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSubmit();
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+
+              <DialogFooter className="sm:flex flex-row">
+                <Link to="/categories">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setDialogOpen(false)}
+                    disabled={loading || success}
+                    className="dark:bg-neutral-950 border dark:border-neutral-800"
+                  >
+                    Cancel
+                  </Button>
+                </Link>
+                <Button onClick={handleSubmit} className="gap-2">
+                  {loading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="h-4 w-4" />
+                      Create Category
+                    </>
+                  )}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
         <Input
           placeholder="Search categories..."
-          className="mb-4 w-80 float-right"
+          className="text-xs sm:text-sm h-9 px-2 sm:px-4 w-full sm:w-80"
+          value={searchItem}
+          onChange={handleInputChange}
         />
       </div>
       <DataTable columns={columns} data={category} />

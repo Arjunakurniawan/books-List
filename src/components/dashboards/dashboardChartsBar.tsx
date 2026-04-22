@@ -3,7 +3,7 @@
 import { MoreHorizontal } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis, Cell } from "recharts";
 import { useState } from "react";
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "@/components/common/theme-provider";
 
 import {
   Card,

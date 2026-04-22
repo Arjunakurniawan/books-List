@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 import type { BookResponse } from "@/types/ApiResponse.type";
 import { type ColumnDef } from "@tanstack/react-table";
 import {
@@ -42,11 +44,15 @@ export const createColumns = (
     header: "Description",
     cell({ row }) {
       const description = row.getValue("description") as string;
+      const isMobile = useIsMobile()  ;
       return (
         <span>
-          {description.length > 100
-            ? description.substring(0, 100) + "..."
-            : description}
+          {isMobile && description.length > 30
+            ? description.substring(0, 30) + "..."
+
+            : !isMobile && description.length > 100
+              ? description.substring(0, 100) + "..."
+              : description}
         </span>
       );
     },
