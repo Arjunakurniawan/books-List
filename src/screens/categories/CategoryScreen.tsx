@@ -17,7 +17,7 @@ function CategoryScreen() {
         )}
       >
         <div className="pt-2 lg:pt-4 px-6 lg:ml-5">
-          <h1 className="text-2xl text-4xl">List Category.</h1>
+          <h1 className="text-4xl">List Category.</h1>
           <AppBreadcrumb to="/categories">Categories</AppBreadcrumb>
           <CategoryTable />
         </div>

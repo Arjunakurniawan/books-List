@@ -14,7 +14,7 @@ function App() {
           <div className="flex flex-col flex-1">
             <TopBar />
             <MobileNav />
-            <main className="pt-16 w-screen h-screen overflow-auto">
+            <main className="pt-16 w-screen h-screen mb-5 overflow-auto">
               <RoutesApp />
             </main>
           </div>

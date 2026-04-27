@@ -8,7 +8,7 @@ import {
 import { SlashIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
-function AppBreadcrumb({to, children}: {to: string; children: React.ReactNode}) {
+function AppBreadcrumb({to, children}: {to: string; children: React.ReactNode;}) {
   return (
     <>
       <Breadcrumb className="pt-4">

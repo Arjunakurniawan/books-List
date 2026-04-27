@@ -44,12 +44,12 @@ export const createColumns = (
     header: "Description",
     cell({ row }) {
       const description = row.getValue("description") as string;
-      const isMobile = useIsMobile()  ;
+      const isMobile = useIsMobile();
+      
       return (
         <span>
           {isMobile && description.length > 30
             ? description.substring(0, 30) + "..."
-
             : !isMobile && description.length > 100
               ? description.substring(0, 100) + "..."
               : description}

@@ -37,6 +37,7 @@ import { getCategories } from "@/services/category";
 import type { CategoryResponse } from "@/types/ApiResponse.type";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { createBook } from "@/services/book";
+import AppBreadcrumb from "@/components/common/AppBreadcrumb";
 
 export default function AddBookScreen() {
   const isMobile = useIsMobile();
@@ -129,40 +130,19 @@ export default function AddBookScreen() {
         </Alert>
       )}
 
-      <div>
-        <Link to="/books" className="relative top-9 left-7">
-          <ArrowLeft size={35} className="hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-all duration-300 "/>
+      <div className="lg:ml-5 px-6">
+        <Link to="/books" className="relative top-9">
+          <ArrowLeft
+            size={35}
+            className="hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-all duration-300 "
+          />
         </Link>
-        <h1 className="text-3xl pl-20">Add a new Book.</h1>
-        <Breadcrumb className="pt-8 pl-10">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/">Home</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <SlashIcon />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/books">Books</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <SlashIcon />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/book/create">new Book</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <h1 className="text-3xl pl-10">Add a new Book.</h1>
+        <AppBreadcrumb to="book/create">Add a book</AppBreadcrumb>
       </div>
 
       {/* Add Book Form */}
-      <div className="w-[90%] ml-5 mt-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 lg:w-[50%]">
+      <div className="w-[90%] ml-5 lg:ml-10 mt-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 lg:w-[50%]">
         <form>
           <FieldGroup>
             <FieldSet>
