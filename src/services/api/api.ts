@@ -6,5 +6,6 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // Sertakan cookie untuk otentikasi
 });
 export default api;

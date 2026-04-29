@@ -28,6 +28,19 @@ export type CategoryResponse = {
   name: string;
 };
 
+export type User = {
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+};
+
+export type UserResponse = {
+  id: string;
+  email: string;
+  role: string;
+};
+
 export type ApiResponse<T> = {
   data: T;
   message: string | null;

@@ -29,7 +29,7 @@ function Dashboard() {
           isMobile ? "m-0" : state === "expanded" ? "ml-60" : "ml-28"
         )}
       >
-        <div className="pt-4 px-6 pb-8 ml-5">
+      <div className="pt-4 px-6 pb-8 ml-5">
           <h1 className="text-4xl">Dashboard.</h1>
           <Breadcrumb className="pt-6 pb-8">
             <BreadcrumbList>
