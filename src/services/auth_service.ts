@@ -1,5 +1,10 @@
 import api from "./api/api";
-import type { LoginPayload, LoginResponse, RegisterPayload, RegisterResponse} from "@/types/ApiResponse.type";
+import type {
+  LoginPayload,
+  LoginResponse,
+  RegisterPayload,
+  RegisterResponse,
+} from "@/types/ApiResponse.type";
 
 export const registerUser = async (payload: RegisterPayload) => {
   try {
@@ -16,13 +21,20 @@ export const registerUser = async (payload: RegisterPayload) => {
 
 export const loginUser = async (payload: LoginPayload) => {
   try {
-    const response = await api.post<LoginResponse>(
-      "/auth/login",
-      payload,
-    );
+    const response = await api.post<LoginResponse>("/auth/login", payload);
     return response.data;
   } catch (error) {
     console.error("Error logging in user:", error);
+    throw error;
+  }
+};
+
+export const getProfile = async () => {
+  try {
+    const response = await api.get("/profile");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching profile:", error);
     throw error;
   }
 };
