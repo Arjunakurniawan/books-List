@@ -7,7 +7,7 @@ import EditBookScreen from "@/screens/books/EditBookScreen";
 import DashboardLayout from "@/components/dashboards/layout/dashboardLayout";
 import LoginScreen from "@/screens/login/loginScreen";
 import RegisterScreen from "@/screens/register/registerScreen";
-import ProtectedRoute from "@/components/common/protectedRoute";
+import ProtectedRoute from "@/routes/ProtectedRoute";
 
 function RoutesApp() {
   return (

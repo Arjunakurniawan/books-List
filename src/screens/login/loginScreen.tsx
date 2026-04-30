@@ -9,20 +9,25 @@ function LoginScreen() {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
+      setLoading(true);
       await loginUser({
         email: formLogin.email,
         password: formLogin.password,
       });
-      alert("Login successful!");
-      navigate("/");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } catch (err: any) {
       alert("Login failed. try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,7 +42,7 @@ function LoginScreen() {
             </p>
           </div>
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <div className="space-y-4">
             <div className="space-y-1.5">
               <label className="text-xs text-neutral-400">Email</label>
               <Input
@@ -74,10 +79,23 @@ function LoginScreen() {
               />
             </div>
 
-            <Button type="submit" variant="btnLogin">
-              Sign In
+            <Button
+              type="submit"
+              onClick={handleSubmit}
+              variant="btnLogin"
+              disabled={loading}
+              className="gap-2"
+            >
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                  Loading..
+                </>
+              ) : (
+                <>Sign In</>
+              )}
             </Button>
-          </form>
+          </div>
 
           {/* Divider */}
           <div className="relative flex items-center justify-center py-2">
