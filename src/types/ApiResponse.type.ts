@@ -31,14 +31,28 @@ export type CategoryResponse = {
 export type User = {
   id: string;
   username: string;
+  password: string;
   email: string;
   role: string;
 };
 
 export type UserResponse = {
-  id: string;
+  username: string;
+  password: string;
   email: string;
   role: string;
+};
+
+export type RegisterPayload = {
+  username: string;
+  email: string;
+  password: string;
+  role?: string;
+};
+
+export type LoginPayload = {
+  email: string;
+  password: string;
 };
 
 export type ApiResponse<T> = {
@@ -50,3 +64,7 @@ export type ApiResponse<T> = {
     limit: number;
   };
 };
+
+export type LoginResponse = ApiResponse<UserResponse>;
+
+export type RegisterResponse = ApiResponse<UserResponse>;

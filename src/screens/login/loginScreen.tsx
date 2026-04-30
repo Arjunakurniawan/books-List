@@ -1,8 +1,31 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { loginUser } from "@/services/auth_service";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function LoginScreen() {
+  const [formLogin, setFormLogin] = useState({
+    email: "",
+    password: "",
+  });
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await loginUser({
+        email: formLogin.email,
+        password: formLogin.password,
+      });
+      alert("Login successful!");
+      navigate("/");
+    } catch (err: any) {
+      alert("Login failed. try again.");
+    }
+  };
+
   return (
     <div className="h-screen bg-black text-white font-sans antialiased flex items-center justify-center p-6">
       <div className="flex items-center">
@@ -14,14 +37,16 @@ function LoginScreen() {
             </p>
           </div>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-1.5">
               <label className="text-xs text-neutral-400">Email</label>
               <Input
                 type="email"
                 placeholder="name@example.com"
-                // value={email}
-                // onChange={(e) => setEmail(e.target.value)}
+                value={formLogin.email}
+                onChange={(e) =>
+                  setFormLogin({ ...formLogin, email: e.target.value })
+                }
                 required
                 className="border border-neutral-800"
               />
@@ -40,15 +65,16 @@ function LoginScreen() {
               <Input
                 type="password"
                 placeholder="••••••••"
-                // value={password}
-                // onChange={(e) => setPassword(e.target.value)}
+                value={formLogin.password}
+                onChange={(e) =>
+                  setFormLogin({ ...formLogin, password: e.target.value })
+                }
                 required
                 className="border border-neutral-800"
               />
             </div>
 
             <Button type="submit" variant="btnLogin">
-              {/* {isLoading ? "Ngecek bentar..." : "Gas Login"} */}
               Sign In
             </Button>
           </form>

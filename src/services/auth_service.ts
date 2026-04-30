@@ -1,33 +1,26 @@
 import api from "./api/api";
-import type { ApiResponse, UserResponse } from "@/types/ApiResponse.type";
+import type { LoginPayload, LoginResponse, RegisterPayload, RegisterResponse} from "@/types/ApiResponse.type";
 
-export const registerUser = async (userData: {
-  name: string;
-  email: string;
-  password: string;
-}) => {
+export const registerUser = async (payload: RegisterPayload) => {
   try {
-    const response = await api.post<ApiResponse<UserResponse>>(
+    const response = await api.post<RegisterResponse>(
       "/auth/register",
-      userData,
+      payload,
     );
-    return response.data.data;
+    return response.data;
   } catch (error) {
     console.error("Error registering user:", error);
     throw error;
   }
 };
 
-export const loginUser = async (credentials: {
-  email: string;
-  password: string;
-}) => {
+export const loginUser = async (payload: LoginPayload) => {
   try {
-    const response = await api.post<ApiResponse<UserResponse>>(
+    const response = await api.post<LoginResponse>(
       "/auth/login",
-      credentials,
+      payload,
     );
-    return response.data.data;
+    return response.data;
   } catch (error) {
     console.error("Error logging in user:", error);
     throw error;
