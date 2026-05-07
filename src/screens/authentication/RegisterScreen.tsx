@@ -1,3 +1,4 @@
+import { ModeToggle } from "@/components/common/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { registerUser } from "@/services/auth_service";
@@ -21,17 +22,23 @@ function RegisterScreen() {
         password: formData.password,
         role: formData.role,
       });
+      console.log("before:", registerUser);
+
       alert("Registration successful! Please log in.");
     } catch (err: any) {
       if (err.response && err.response.data) {
         alert(`${err.response.data.status}`);
       }
+      console.log("after:", registerUser);
     }
   };
 
   return (
-    <div className="h-screen bg-black text-white font-sans antialiased flex items-center justify-center p-6">
+    <div className="h-screen dark:bg-black dark:text-white font-sans antialiased flex items-center justify-center p-6">
       <div className="flex items-center">
+        <div className="absolute top-5 right-5">
+          <ModeToggle />
+        </div>
         <div className="lg:w-[365px] mx-auto space-y-6">
           <div className="space-y-2 text-left">
             <h1 className="text-3xl font-semibold">Create an account</h1>
@@ -113,7 +120,7 @@ function RegisterScreen() {
           </form>
           <p className="text-center text-xs text-neutral-400">
             Already have an account?
-            <Link to="/login" className="text-white underline pl-1">
+            <Link to="/login" className="text-black dark:text-white underline pl-1">
               Sign In
             </Link>
           </p>

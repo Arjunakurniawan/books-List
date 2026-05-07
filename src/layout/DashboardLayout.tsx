@@ -1,8 +1,8 @@
-import Sidebar from "../../common/Sidebar";
-import TopBar from "../../common/TopBar";
-import MobileNav from "../../common/MobileNav";
-import { ThemeProvider } from "../../common/theme-provider";
-import { SidebarProvider } from "../../ui/sidebar";
+import Sidebar from "../components/common/Sidebar";
+import TopBar from "../components/common/TopBar";
+import MobileNav from "../components/common/MobileNav";
+import { ThemeProvider } from "../components/common/theme-provider";
+import { SidebarProvider } from "../components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 
 const DashboardLayout = () => {

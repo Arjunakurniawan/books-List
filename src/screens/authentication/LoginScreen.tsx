@@ -1,3 +1,4 @@
+import { ModeToggle } from "@/components/common/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { loginUser } from "@/services/auth_service";
@@ -25,15 +26,20 @@ function LoginScreen() {
         navigate("/");
       }, 1000);
     } catch (err: any) {
-      alert("Login failed. try again.");
+      if (err.response && err.status) {
+        alert(`${err.response.data.status}`);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="h-screen bg-black text-white font-sans antialiased flex items-center justify-center p-6">
+    <div className="relative h-screen font-sans antialiased flex items-center justify-center p-6">
       <div className="flex items-center">
+        <div className="absolute top-5 right-5">
+          <ModeToggle />
+        </div>
         <div className="lg:w-[365px] mx-auto space-y-6 ">
           <div className="space-y-2 text-left">
             <h1 className="text-3xl font-semibold">Login to your account</h1>
@@ -100,14 +106,14 @@ function LoginScreen() {
           {/* Divider */}
           <div className="relative flex items-center justify-center py-2">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-neutral-800"></div>
+              <div className="w-full border-t border-neutral-400 dark:border-neutral-800"></div>
             </div>
-            <span className="relative px-3 bg-black text-xs text-neutral-700 uppercase">
+            <span className="relative px-3 bg-white dark:bg-black text-xs text-neutral-400  dark:text-neutral-800 uppercase">
               Or continue with
             </span>
           </div>
 
-          <Button variant="btnRegister" className="w-full">
+          <Button variant="btnOutlineCustom" className="w-full">
             <div className="flex items-center justify-center gap-2">
               <svg
                 role="img"
@@ -124,7 +130,10 @@ function LoginScreen() {
           {/* Link Sign Up */}
           <p className="text-center text-xs text-neutral-400">
             Don't have an account?
-            <Link to="/register" className="text-white underline pl-1">
+            <Link
+              to="/register"
+              className="text-black dark:text-white underline pl-1"
+            >
               Sign Up
             </Link>
           </p>

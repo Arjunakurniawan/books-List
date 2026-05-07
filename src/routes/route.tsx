@@ -4,16 +4,19 @@ import BookScreen from "@/screens/books/BookScreen";
 import CategoryScreen from "@/screens/categories/CategoryScreen";
 import AddBookScreen from "@/screens/books/AddBookScreen";
 import EditBookScreen from "@/screens/books/EditBookScreen";
-import DashboardLayout from "@/components/dashboards/layout/dashboardLayout";
-import LoginScreen from "@/screens/login/loginScreen";
-import RegisterScreen from "@/screens/register/registerScreen";
+import LoginScreen from "@/screens/authentication/LoginScreen";
+import RegisterScreen from "@/screens/authentication/RegisterScreen";
 import ProtectedRoute from "@/routes/ProtectedRoute";
+import DashboardLayout from "@/layout/DashboardLayout";
+import LoginLayout from "@/layout/AuthLayout";
 
 function RoutesApp() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginScreen />} />
-      <Route path="/register" element={<RegisterScreen />} />
+      <Route element={<LoginLayout />}>
+        <Route path="/login" element={<LoginScreen />} />
+        <Route path="/register" element={<RegisterScreen />} />
+      </Route>
 
       <Route element={<ProtectedRoute />}>
         <Route element={<DashboardLayout />}>

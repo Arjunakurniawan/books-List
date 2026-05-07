@@ -17,13 +17,14 @@ const buttonVariants = cva(
           "border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        expandedBtn: "bg-white hover:bg-neutral-200 text-black",
+        expandedBtn: "bg-white hover:bg-neutral-200 text-black dark:border dark:border-neutral-700 dark:bg-black dark:hover:bg-neutral-700/90 transition-all",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline bg-neutral-900",
         primary: "bg-blue-500 text-white hover:bg-blue-600",
         topbar: "bg-transparent hover:bg-neutral-200/50",
-        btnLogin: "bg-accent text-accent-foreground hover:bg-accent/90 w-full",
-        btnRegister: "border border-neutral-800 bg-black shadow-sm hover:bg-accent hover:text-accent-foreground transition-all",
+        btnLogin: "border border-neutral-800 hover:bg-neutral-800/90 dark:text-accent-foreground text-white bg-neutral-800 dark:bg-foreground dark:text-black dark:hover:bg-foreground/90 w-full ",
+        btnRegister: "border border-neutral-800 bg-black shadow-sm hover:bg-neutral-900/60 hover:text-accent-foreground transition-all",
+        btnOutlineCustom: "border border-neutral-800 bg-transparent shadow-sm hover:bg-neutral-200/90 hover:text-accent-foreground transition-all",
       },
       size: {
         default: "h-9 px-4 py-2",
