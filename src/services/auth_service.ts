@@ -2,6 +2,7 @@ import api from "./api/api";
 import type {
   LoginPayload,
   LoginResponse,
+  LogoutResponse,
   RegisterPayload,
   RegisterResponse,
 } from "@/types/ApiResponse.type";
@@ -38,3 +39,12 @@ export const getProfile = async () => {
     throw error;
   }
 };
+
+export const logoutUser = async () => {
+  try {
+    const response = await api.post<LogoutResponse>("/auth/logout")
+    return response.data
+  } catch (error) {
+    console.error("Error Logout", error)
+  }
+}

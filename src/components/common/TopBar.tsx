@@ -17,11 +17,13 @@ import {
 } from "@/components/ui/popover";
 import { ModeToggle } from "./mode-toggle";
 import { useEffect, useState } from "react";
-import { getProfile } from "@/services/auth_service";
+import { getProfile, logoutUser } from "@/services/auth_service";
 import type { User } from "@/types/ApiResponse.type";
+import { useNavigate } from "react-router-dom";
 
 function TopBar() {
   const [userData, setUserData] = useState<User | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfileUser = async () => {
@@ -35,6 +37,15 @@ function TopBar() {
 
     fetchProfileUser();
   }, []);
+
+  const handleButtonLoggout = async () => {
+    try {
+      await logoutUser();
+      navigate("/auth/login");
+    } catch (error) {
+      alert("logout error");
+    }
+  };
 
   return (
     <header className="hidden md:flex p-3 px-8 shadow-sm justify-end fixed top-0 left-0 right-0 z-20 bg-white dark:bg-neutral-950">
@@ -63,9 +74,7 @@ function TopBar() {
               className="flex items-center gap-2 p-2 border dark:border-neutral-800"
             >
               <img
-                src={
-                  AvatarImg
-                }
+                src={AvatarImg}
                 alt="User"
                 className="w-8 h-8 rounded-full object-cover"
               />
@@ -75,8 +84,6 @@ function TopBar() {
               <ChevronDownIcon className="w-4 h-4 text-neutral-500" />
             </Button>
           </PopoverTrigger>
-
-          {/* p-0 biar kita bisa ngatur padding tiap section sendiri, w-72 biar agak lebaran */}
           <PopoverContent
             align="end"
             className="w-72 p-0 bg-white dark:bg-neutral-950 border-neutral-200 dark:border-neutral-800 shadow-md rounded-lg overflow-hidden"
@@ -105,8 +112,7 @@ function TopBar() {
 
             {/* Garis Pemisah (Divider) */}
             <div className="h-px bg-neutral-100 dark:bg-neutral-800" />
-
-            {/* Menu Group 1: Profile, Subscription, Invoice */}
+            
             <div className="p-1.5">
               <a
                 href="#"
@@ -149,7 +155,7 @@ function TopBar() {
             {/* Menu Group 3: Signout (Warna Merah) */}
             <div className="p-1.5">
               <button
-                // Ganti href dengan onClick function logout lu nanti
+                onClick={handleButtonLoggout}
                 className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors text-sm font-medium text-red-600 dark:text-red-500"
               >
                 <LogOut className="w-4 h-4" />

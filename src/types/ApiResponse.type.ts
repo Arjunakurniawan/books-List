@@ -68,3 +68,5 @@ export type ApiResponse<T> = {
 export type LoginResponse = ApiResponse<UserResponse>;
 
 export type RegisterResponse = ApiResponse<UserResponse>;
+
+export type LogoutResponse = ApiResponse<null>

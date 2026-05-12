@@ -21,10 +21,7 @@ function LoginScreen() {
         email: formLogin.email,
         password: formLogin.password,
       });
-
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      navigate("/");
     } catch (err: any) {
       if (err.response && err.status) {
         alert(`${err.response.data.status}`);
