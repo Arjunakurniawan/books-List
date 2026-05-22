@@ -1,19 +1,7 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import clsx from "clsx";
-import {
-  SlashIcon,
-  ArrowLeft,
-  CircleCheckBig,
-  CircleAlert,
-} from "lucide-react";
+import { ArrowLeft, CircleCheckBig, CircleAlert } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
@@ -32,20 +20,15 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import React, { useEffect, useState } from "react";
-import { getCategories } from "@/services/category";
-import type { CategoryResponse } from "@/types/ApiResponse.type";
+import React, { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { createBook } from "@/services/book";
 import AppBreadcrumb from "@/components/common/AppBreadcrumb";
+import { useCreateBooks } from "@/hooks/books/useBooks";
+import { useCategories } from "@/hooks/categories/useCategories";
 
 export default function AddBookScreen() {
   const isMobile = useIsMobile();
   const { state } = useSidebar();
-
-
-  const [category, setCategory] = useState<CategoryResponse[]>([]);
-  const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -54,47 +37,41 @@ export default function AddBookScreen() {
     stock: 0,
     categoryId: "",
   });
-  const [error, setError] = useState("");
+
+  const [status, setStatus] = useState<{
+    type: "Success" | "Error" | null;
+    msg: string;
+  }>({ type: null, msg: "" });
+
+  const { data } = useCategories();
+  const createMutation = useCreateBooks();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getCategories();
-        setCategory(response);
-      } catch (error) {
-        setError("Failed Creating Book");
-        console.error("Error Creating Book:", error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
+  const showAlert = (type: "Success" | "Error", msg: string) => {
+    setStatus({ type, msg });
+    setTimeout(() => setStatus({ type: null, msg: "" }), 3000);
+  };
 
   const handleButtonSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      await createBook({
+    createMutation.mutate(
+      {
         name: formData.name,
         description: formData.description,
         image: formData.image,
         price: formData.price,
         stock: formData.stock,
         categoryId: formData.categoryId,
-      });
-
-      setSuccess(true);
-
-      setTimeout(() => {
-        setSuccess(false);
-        navigate("/books");
-      }, 2000);
-    } catch (error) {
-      console.error("Error creating book:", error);
-      setError("Failed to create book. Please try again.");
-      setTimeout(() => setError(""), 3000);
-    }
+      },
+      {
+        onSuccess: () => {
+          (showAlert("Success", "Book created successfully"),
+            navigate("/books"));
+        },
+        onError: () => showAlert("Error", "Error created books"),
+      },
+    );
   };
 
   return (
@@ -104,29 +81,25 @@ export default function AddBookScreen() {
         isMobile ? "m-0" : state === "expanded" ? "ml-60" : "ml-28",
       )}
     >
-      {success && (
+      {status.type === "Success" && (
         <Alert
           variant="default"
           className="animate-fade-left-out bg-green-100 dark:bg-green-900/20 dark:text-green-400 border-green-600 border-l-4 border-t-0 border-b-0 border-r-0 mb-4 text-green-600 fixed top-4 right-4 z-[9999] w-80"
         >
           <CircleCheckBig color="#4ade80" size={15} />
-          <AlertTitle>Book Created Successfully</AlertTitle>
-          <AlertDescription>
-            You have successfully created a new book.
-          </AlertDescription>
+          <AlertTitle>{status.type}</AlertTitle>
+          <AlertDescription>{status.msg}</AlertDescription>
         </Alert>
       )}
       {/* Error Alert */}
-      {error && (
+      {status.type === "Error" && (
         <Alert
           variant="destructive"
           className="animate-fade-left-out bg-red-100/85 dark:bg-red-900/45 dark:text-red-400 border-red-600 border-l-4 border-t-0 border-b-0 border-r-0 mb-4 text-red-600 fixed top-4 right-4 z-[9999] w-80"
         >
           <CircleAlert color="#ef4444" size={15} />
-          <AlertTitle>Error Creating Book</AlertTitle>
-          <AlertDescription>
-            please check your input and try again.
-          </AlertDescription>
+          <AlertTitle>{status.type}</AlertTitle>
+          <AlertDescription>{status.msg}</AlertDescription>
         </Alert>
       )}
 
@@ -222,9 +195,12 @@ export default function AddBookScreen() {
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      {category.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id as string}>
-                          {cat.name}
+                      {data?.map((category) => (
+                        <SelectItem
+                          key={category.id}
+                          value={category.id as string}
+                        >
+                          {category.name}
                         </SelectItem>
                       ))}
                     </SelectContent>

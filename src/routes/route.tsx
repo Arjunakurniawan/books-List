@@ -7,7 +7,7 @@ import EditBookScreen from "@/screens/books/EditBookScreen";
 import LoginScreen from "@/screens/authentication/LoginScreen";
 import RegisterScreen from "@/screens/authentication/RegisterScreen";
 import ProtectedRoute from "@/routes/ProtectedRoute";
-import DashboardLayout from "@/layout/DashboardLayout";
+import DashboardLayout from "@/layout/MainLayout";
 import LoginLayout from "@/layout/AuthLayout";
 
 function RoutesApp() {

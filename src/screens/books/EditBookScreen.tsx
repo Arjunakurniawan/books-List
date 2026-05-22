@@ -1,19 +1,7 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import clsx from "clsx";
-import {
-  SlashIcon,
-  ArrowLeft,
-  CircleCheckBig,
-  CircleAlert,
-} from "lucide-react";
+import { ArrowLeft, CircleCheckBig, CircleAlert } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
@@ -35,17 +23,11 @@ import {
 import React, { useEffect, useState } from "react";
 import type { CategoryResponse } from "@/types/ApiResponse.type";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { editBook, getBookById } from "@/services/book";
-import { getCategories } from "@/services/category";
+import AppBreadcrumb from "@/components/common/AppBreadcrumb";
+import { useBookById, useEditBooks } from "@/hooks/books/useBooks";
+import { useCategories } from "@/hooks/categories/useCategories";
 
 export default function EditBookScreen() {
-  const isMobile = useIsMobile();
-  const { state } = useSidebar();
-
-  const { id } = useParams<{ id: string }>();
-
-  const [category, setCategory] = useState<CategoryResponse[]>([]);
-  const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -54,69 +36,66 @@ export default function EditBookScreen() {
     stock: 0,
     categoryId: "",
   });
-  const [error, setError] = useState("");
+
+  const isMobile = useIsMobile();
+  const { state } = useSidebar();
+  const { id } = useParams();
   const navigate = useNavigate();
 
+  const updateMutation = useEditBooks();
+  const { data } = useCategories();
+  const { data: bookData, isLoading, isError } = useBookById(id as string);
+
   useEffect(() => {
-    const fetchBookData = async () => {
-      try {
-        const categoriesData = await getCategories();
-        setCategory(categoriesData);
+    if (bookData) {
+      setFormData({
+        name: bookData.name,
+        description: bookData.description,
+        image: bookData.image,
+        price: bookData.price,
+        stock: bookData.stock,
+        categoryId: bookData.categoryId,
+      });
+    }
+  }, [bookData, data]);
 
-        if (id) {
-          const bookData = await getBookById(id as string);
-          setFormData({
-            name: bookData.name,
-            description: bookData.description,
-            image: bookData.image,
-            price: bookData.price,
-            stock: bookData.stock,
-            categoryId: bookData.categoryId,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching book data:", error);
-        setError("Failed to fetch book data. Please try again.");
-        setTimeout(() => setError(""), 3000);
-      }
-    };
+  const [status, setStatus] = useState<{
+    type: "Success" | "Error" | null;
+    msg: string;
+  }>({ type: null, msg: "" });
 
-    fetchBookData();
-  }, [id]);
+  const showAlert = (type: "Success" | "Error", msg: string) => {
+    setStatus({ type, msg });
+    setTimeout(() => setStatus({ type: null, msg: "" }), 3000);
+  };
 
   const handleButtonSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      await editBook(id as string, {
-        name: formData.name,
-        description: formData.description,
-        image: formData.image,
-        price: formData.price,
-        stock: formData.stock,
-        categoryId: formData.categoryId,
-      });
-      setSuccess(true);
-
-      setTimeout(() => {
-        setSuccess(false);
-        navigate("/books");
-      }, 2000);
-    } catch (error) {
-      console.error("error creating", error);
-      setError("Failed to create book. Please try again.");
-      setTimeout(() => setError(""), 3000);
-    }
+    updateMutation.mutate(
+      { id: id as string, bookData: formData },
+      {
+        onSuccess: () => {
+          navigate("/books");
+          showAlert("Success", "successfully update this book");
+        },
+        onError: () => showAlert("Error", "Error Update this book"),
+      },
+    );
   };
 
+  if (isError) return <div className="text-center">Failed Get data Book!</div>;
+
   return (
+
+    
     <div
       className={clsx(
-        "h-screen transition-all duration-300 mt-12",
+        "h-screen transition-all duration-300",
         isMobile ? "m-0" : state === "expanded" ? "ml-60" : "ml-28",
       )}
     >
-      {success && (
+      {status.type === "Success" && (
         <Alert
           variant="default"
           className="animate-fade-left-out bg-green-100 dark:bg-green-900/20 dark:text-green-400 border-green-600 border-l-4 border-t-0 border-b-0 border-r-0 mb-4 text-green-600 fixed top-4 right-4 z-[9999] w-80"
@@ -129,7 +108,7 @@ export default function EditBookScreen() {
         </Alert>
       )}
       {/* Error Alert */}
-      {error && (
+      {status.type === "Error" && (
         <Alert
           variant="destructive"
           className="animate-fade-left-out bg-red-100/85 dark:bg-red-900/45 dark:text-red-400 border-red-600 border-l-4 border-t-0 border-b-0 border-r-0 mb-4 text-red-600 fixed top-4 right-4 z-[9999] w-80"
@@ -139,40 +118,16 @@ export default function EditBookScreen() {
           <AlertDescription>please try again later.</AlertDescription>
         </Alert>
       )}
-      <div className="pt-4">
-        <Link to="/books" className="relative top-8 left-7">
-          <ArrowLeft size={32} />
+      <div className="lg:ml-5 px-6">
+        <Link to="/books" className="relative top-9">
+          <ArrowLeft size={35} />
         </Link>
-        <h1 className="text-4xl pl-20">Edit Book.</h1>
-        <Breadcrumb className="pt-8 pl-8">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/">Home</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <SlashIcon />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/books">Books</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <SlashIcon />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/book/create">New Book</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <h1 className="text-3xl pl-10">Edit Book.</h1>
+        <AppBreadcrumb to="book/edit">Edit a book</AppBreadcrumb>
       </div>
 
       {/* Add Book Form */}
-      <div className="w-[200%] ml-8 mt-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-lg p-6">
+      <div className="w-[90%] ml-5 lg:ml-10 mt-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 lg:w-[50%]">
         <form>
           <FieldGroup>
             <FieldSet>
@@ -255,7 +210,7 @@ export default function EditBookScreen() {
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      {category.map((cat) => (
+                      {data?.map((cat) => (
                         <SelectItem key={cat.id} value={cat.id as string}>
                           {cat.name}
                         </SelectItem>

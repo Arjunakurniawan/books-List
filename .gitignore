@@ -23,3 +23,5 @@ bun_lock
 *.njsproj
 *.sln
 *.sw?
+
+GEMINI.md

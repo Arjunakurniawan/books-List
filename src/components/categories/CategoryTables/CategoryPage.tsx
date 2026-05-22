@@ -1,10 +1,4 @@
-import type { CategoryResponse } from "@/types/ApiResponse.type";
-import { useState, useEffect } from "react";
-import {
-  getCategories,
-  createCategory,
-  deleteCategory,
-} from "@/services/category";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,76 +16,51 @@ import {
 } from "@/components/ui/dialog";
 import { Link } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  useCategories,
+  useCreateCategories,
+  useDeleteCategories,
+} from "@/hooks/categories/useCategories";
 
 export default function CategoryTable() {
-  const [category, setCategory] = useState<CategoryResponse[]>([]);
-  const [secondaryData, setSecondaryData] = useState<CategoryResponse[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [categoryName, setCategoryName] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
   const [searchItem, setSearchItem] = useState("");
 
-  // Function to refresh categories data
-  const refreshCategories = async () => {
-    try {
-      const response = await getCategories();
-      setCategory(response);
-      setSecondaryData(response);
-      console.log("Refreshed categories:", response);
-    } catch (error) {
-      console.error("Error refreshing data:", error);
-    }
-  };
+  const [status, setStatus] = useState<{
+    type: "Success" | "Error" | null;
+    msg: string;
+  }>({ type: null, msg: "" });
 
-  useEffect(() => {
-    refreshCategories();
-  }, []);
+  const { data } = useCategories();
+  const createMutation = useCreateCategories();
+  const deleteMutation = useDeleteCategories();
+
+  const showAlert = (type: "Success" | "Error", msg: string) => {
+    setStatus({ type, msg });
+    setTimeout(() => setStatus({ type: null, msg: "" }), 3000);
+  };
 
   const handleSubmit = async () => {
     if (!categoryName.trim()) {
-      setError("Category name is required");
-
-      setTimeout(() => {
-        setError("");
-      }, 3000);
-      return;
+      return showAlert("Error", "category name is required");
     }
 
-    setLoading(true);
-    setError("");
-
-    try {
-      await createCategory({
-        name: categoryName.trim(),
-      });
-
-      setSuccess(true);
-      setCategoryName("");
-
-      setTimeout(() => {
+    createMutation.mutate({ name: categoryName.trim() } as any, {
+      onSuccess: () => {
+        showAlert("Success", "category created successfully");
+        setCategoryName("");
         setDialogOpen(false);
-        setSuccess(false);
-      }, 1000);
-    } catch (error) {
-      console.error("Error creating category:", error);
-      setError("Failed to create category. Please try again.");
-
-      setTimeout(() => {
-        setError("");
-      }, 3000);
-    } finally {
-      setLoading(false);
-    }
+      },
+      onError: () => showAlert("Error", "Error created category"),
+    });
   };
 
   const handleOpenChange = (open: boolean) => {
     setDialogOpen(open);
     if (!open) {
       setCategoryName("");
-      setError("");
-      setSuccess(false);
+      setStatus({ type: null, msg: "" });
     }
   };
 
@@ -102,52 +71,48 @@ export default function CategoryTable() {
         "Are you sure you want to delete this category?",
       );
       if (confirmed) {
-        await deleteCategory(id);
-        await refreshCategories();
+        deleteMutation.mutate(id, {
+          onSuccess: () =>
+            showAlert("Success", "category deleted successfully"),
+          onError: () => showAlert("Error", "Error deleting category"),
+        });
       }
-    } catch (error) {
-      console.error("Error deleting category:", error);
+    } catch (Error) {
+      console.error("Error deleting category:", Error);
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = e.target.value;
-
-    const filteredCategories = secondaryData.filter((cat) =>
-      cat.name.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-
-    setCategory(filteredCategories);
-    setSearchItem(searchTerm);
-  };
+  const filteredCategories = Array.isArray(data)
+    ? data.filter((cat) =>
+        cat.name.toLowerCase().includes(searchItem.toLowerCase()),
+      )
+    : [];
 
   //create columns with delete and edit action
-  const columns = createColumns(handleDelete, refreshCategories);
+  const columns = createColumns(handleDelete);
 
   return (
     <div className="py-10 px-2 lg:px-4">
       {/* Success Alert */}
-      {success && (
+      {status.type === "Success" && (
         <Alert
           variant="default"
           className="animate-fade-left-out bg-green-100 dark:bg-green-900/20 dark:text-green-400 border-green-600 border-l-4 border-t-0 border-b-0 border-r-0 mb-4 text-green-600 fixed top-4 right-4 z-[9999] w-80"
         >
           <CircleCheckBig color="#4ade80" size={15} />
-          <AlertTitle>Category Created Successfully</AlertTitle>
-          <AlertDescription>
-            You have successfully created a new category.
-          </AlertDescription>
+          <AlertTitle>{status.type}</AlertTitle>
+          <AlertDescription>{status.msg}</AlertDescription>
         </Alert>
       )}
       {/* Error Alert */}
-      {error && (
+      {status.type === "Error" && (
         <Alert
           variant="destructive"
           className="animate-fade-left-out bg-red-100/85 dark:bg-red-900/45 dark:text-red-400 border-red-600 border-l-4 border-t-0 border-b-0 border-r-0 mb-4 text-red-600 fixed top-4 right-4 z-[9999] w-80"
         >
           <CircleAlert color="#ef4444" size={15} />
-          <AlertTitle>Error Creating Category</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
+          <AlertTitle>{status.type}</AlertTitle>
+          <AlertDescription>{status.msg}</AlertDescription>
         </Alert>
       )}
 
@@ -184,7 +149,7 @@ export default function CategoryTable() {
                     value={categoryName}
                     onChange={(e) => setCategoryName(e.target.value)}
                     className="col-span-4 border border-neutral-800 outline-none dark:focus-visible:border-blue-800"
-                    disabled={loading || success}
+                    disabled={createMutation.isPending}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         handleSubmit();
@@ -200,22 +165,22 @@ export default function CategoryTable() {
                     type="button"
                     variant="outline"
                     onClick={() => setDialogOpen(false)}
-                    disabled={loading || success}
+                    disabled={createMutation.isPending}
                     className="dark:bg-neutral-950 border dark:border-neutral-800"
                   >
                     Cancel
                   </Button>
                 </Link>
                 <Button onClick={handleSubmit} className="gap-2">
-                  {loading ? (
+                  {createMutation.isPending ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Creating...
+                      creating...
                     </>
                   ) : (
                     <>
-                      <Plus className="h-4 w-4" />
-                      Create Category
+                      <Plus className="size-1" />
+                      create Category
                     </>
                   )}
                 </Button>
@@ -227,10 +192,10 @@ export default function CategoryTable() {
           placeholder="Search categories..."
           className="text-xs sm:text-sm h-9 px-2 sm:px-4 w-full sm:w-80"
           value={searchItem}
-          onChange={handleInputChange}
+          onChange={(e) => setSearchItem(e.target.value)}
         />
       </div>
-      <DataTable columns={columns} data={category} />
+      <DataTable columns={columns} data={filteredCategories} />
     </div>
   );
 }

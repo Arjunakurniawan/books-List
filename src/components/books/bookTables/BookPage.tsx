@@ -1,61 +1,39 @@
 import { DataTable } from "@/components/books/bookTables/BookDataTable";
-import type { BookResponse } from "@/types/ApiResponse.type";
-import { useState, useEffect } from "react";
-import { deleteBook, getBooks } from "@/services/book";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Plus, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createColumns } from "./bookColumns";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { useBooks, useDeleteBooks } from "@/hooks/books/useBooks";
 
 export default function BookTable() {
-  const [book, setBook] = useState<BookResponse[]>([]);
-  const [bookData, setBookData] = useState<BookResponse[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
-  const [total, setTotal] = useState(0);
   const [searchItem, setSearchItem] = useState("");
 
-  const fetchData = async (page: number = 1) => {
-    try {
-      const response = await getBooks(page, pageSize);
-      setBook(response.data);
-      setBookData(response.data);
-      setTotal(response.total);
-      setCurrentPage(page);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  const { isLoading, data, isPlaceholderData } = useBooks(
+    currentPage,
+    pageSize,
+  );
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const deleteMutation = useDeleteBooks();
 
   const handleDelete = async (id: string) => {
-    try {
-      const confirmed = window.confirm(
-        "Are you sure you want to delete this book?",
-      );
-      if (confirmed) {
-        await deleteBook(id);
-        await fetchData(currentPage);
-      }
-    } catch (error) {
-      console.error("Error deleting book:", error);
+    if (window.confirm("Are you sure want to delete this book?")) {
+      deleteMutation.mutate(id);
     }
   };
 
-  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = e.target.value;
-
-    const filteredBooks = bookData.filter((book) =>
-      book.name.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-    setBook(filteredBooks);
-    setSearchItem(searchTerm);
-    setCurrentPage(1);
-  };
+  const filteredBooks =
+    data?.data?.filter((book) =>
+      book.name.toLowerCase().includes(searchItem.toLowerCase()),
+    ) || [];
 
   const columns = createColumns(handleDelete);
 
@@ -75,7 +53,9 @@ export default function BookTable() {
           <InputGroupInput
             placeholder="Search..."
             value={searchItem}
-            onChange={handleInputChange}
+            onChange={(e) => {
+              (setSearchItem(e.target.value), setCurrentPage(1));
+            }}
           />
           <InputGroupAddon>
             <Search />
@@ -84,11 +64,12 @@ export default function BookTable() {
       </div>
       <DataTable
         columns={columns}
-        data={book}
+        data={filteredBooks}
         currentPage={currentPage}
-        total={total}
+        total={data?.total || 0}
         pageSize={pageSize}
-        onPageChange={fetchData}
+        onPageChange={(Page) => setCurrentPage(Page)}
+        isLoading={isLoading || isPlaceholderData}
       />
     </>
   );

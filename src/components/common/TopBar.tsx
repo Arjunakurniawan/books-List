@@ -7,9 +7,9 @@ import {
   Settings,
   LogOut,
   User as UserIcon,
+  CircleUser,
 } from "lucide-react";
 import { Button } from "../ui/button";
-import AvatarImg from "@/assets/images/circle-user-regular-full.svg";
 import {
   Popover,
   PopoverContent,
@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 
 function TopBar() {
   const [userData, setUserData] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,10 +41,13 @@ function TopBar() {
 
   const handleButtonLoggout = async () => {
     try {
+      setLoading(true);
       await logoutUser();
       navigate("/auth/login");
     } catch (error) {
       alert("logout error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,11 +77,7 @@ function TopBar() {
               variant="topbar"
               className="flex items-center gap-2 p-2 border dark:border-neutral-800"
             >
-              <img
-                src={AvatarImg}
-                alt="User"
-                className="w-8 h-8 rounded-full object-cover"
-              />
+              <CircleUser className="rounded-full object-cover text-neutral-500/80 dark:text-white" />
               <p className="font-normal text-neutral-500">
                 {userData?.username}
               </p>
@@ -92,11 +92,7 @@ function TopBar() {
             <div className="flex items-center gap-3 p-4">
               {/* Wadah Avatar + Titik Online */}
               <div className="relative">
-                <img
-                  src={AvatarImg}
-                  alt="User"
-                  className="w-10 h-10 rounded-full object-cover"
-                />
+                <CircleUser className="w-10 h-10 rounded-full object-cover text-neutral-500" />
                 {/* Titik Hijau Online */}
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-neutral-950 rounded-full"></span>
               </div>
@@ -112,7 +108,7 @@ function TopBar() {
 
             {/* Garis Pemisah (Divider) */}
             <div className="h-px bg-neutral-100 dark:bg-neutral-800" />
-            
+
             <div className="p-1.5">
               <a
                 href="#"
@@ -158,8 +154,17 @@ function TopBar() {
                 onClick={handleButtonLoggout}
                 className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors text-sm font-medium text-red-600 dark:text-red-500"
               >
-                <LogOut className="w-4 h-4" />
-                Signout
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-red-500  border-t-transparent rounded-full animate-spin" />
+                    Loading..
+                  </>
+                ) : (
+                  <>
+                    <LogOut className="w-4 h-4" />
+                    logOut
+                  </>
+                )}
               </button>
             </div>
           </PopoverContent>

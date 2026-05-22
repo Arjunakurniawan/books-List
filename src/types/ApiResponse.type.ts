@@ -23,6 +23,18 @@ export type BookResponse = {
   categoryId: string;
 };
 
+export type UpdateBook = {
+  id: string;
+  bookData: {
+    name: string;
+    description: string;
+    image: string;
+    price: number;
+    stock: number;
+    categoryId: string;
+  }
+}
+
 export type CategoryResponse = {
   id?: string;
   name: string;

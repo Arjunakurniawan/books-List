@@ -1,19 +1,10 @@
 import DashboardCards from "@/components/dashboards/dashboardCards";
 import { ChartBar } from "@/components/dashboards/dashboardChartsBar";
 import { ChartPie } from "@/components/dashboards/dashboardChartPie";
-import {
-  Breadcrumb,
-  BreadcrumbEllipsis,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import clsx from "clsx";
-import { SlashIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import AppBreadcrumb from "@/components/common/AppBreadcrumb";
 
 function Dashboard() {
   const isMobile = useIsMobile();
@@ -31,20 +22,7 @@ function Dashboard() {
       >
       <div className="pt-4 px-6 pb-8 ml-5">
           <h1 className="text-4xl">Dashboard.</h1>
-          <Breadcrumb className="pt-6 pb-8">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link to="/">Home</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator>
-                <SlashIcon />
-              </BreadcrumbSeparator>
-              <BreadcrumbEllipsis />
-            </BreadcrumbList>
-          </Breadcrumb>
-
+          <AppBreadcrumb to="/dashboard">Dashboard</AppBreadcrumb>
           <div className="space-y-8">
             <div>
               <DashboardCards />
