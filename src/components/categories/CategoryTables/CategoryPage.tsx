@@ -19,7 +19,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   useCategories,
   useCreateCategories,
-  useDeleteCategories,
 } from "@/hooks/categories/useCategories";
 
 export default function CategoryTable() {
@@ -34,11 +33,10 @@ export default function CategoryTable() {
 
   const { data } = useCategories();
   const createMutation = useCreateCategories();
-  const deleteMutation = useDeleteCategories();
 
   const showAlert = (type: "Success" | "Error", msg: string) => {
     setStatus({ type, msg });
-    setTimeout(() => setStatus({ type: null, msg: "" }), 3000);
+    setTimeout(() => setStatus({ type: null, msg: "" }), 4000);
   };
 
   const handleSubmit = async () => {
@@ -50,7 +48,7 @@ export default function CategoryTable() {
       onSuccess: () => {
         showAlert("Success", "category created successfully");
         setCategoryName("");
-        setDialogOpen(false);
+        setTimeout(() => setDialogOpen(false), 500);
       },
       onError: () => showAlert("Error", "Error created category"),
     });
@@ -64,32 +62,13 @@ export default function CategoryTable() {
     }
   };
 
-  // handle delete function
-  const handleDelete = async (id: string) => {
-    try {
-      const confirmed = window.confirm(
-        "Are you sure you want to delete this category?",
-      );
-      if (confirmed) {
-        deleteMutation.mutate(id, {
-          onSuccess: () =>
-            showAlert("Success", "category deleted successfully"),
-          onError: () => showAlert("Error", "Error deleting category"),
-        });
-      }
-    } catch (Error) {
-      console.error("Error deleting category:", Error);
-    }
-  };
-
   const filteredCategories = Array.isArray(data)
     ? data.filter((cat) =>
         cat.name.toLowerCase().includes(searchItem.toLowerCase()),
       )
     : [];
-
-  //create columns with delete and edit action
-  const columns = createColumns(handleDelete);
+  
+  const columns = createColumns(showAlert);
 
   return (
     <div className="py-10 px-2 lg:px-4">
