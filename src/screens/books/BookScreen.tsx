@@ -1,5 +1,5 @@
 import AppBreadcrumb from "@/components/common/AppBreadcrumb";
-import BookTable from "@/components/books/bookTables/BookPage";
+import BookTable from "@/components/books/bookTables/BookTable";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import clsx from "clsx";

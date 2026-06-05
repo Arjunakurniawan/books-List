@@ -1,10 +1,14 @@
 import type { ApiResponse, BookResponse } from "@/types/ApiResponse.type";
 import api from "./api/api";
 
-export const getBooks = async (page: number = 1, limit: number = 10) => {
+export const getBooks = async (
+  page: number = 1,
+  limit: number = 10,
+  search?: string,
+) => {
   try {
     const response = await api.get<ApiResponse<BookResponse[]>>(
-      `/books?page=${page}&limit=${limit}`,
+      `/books?page=${page}&limit=${limit}&search=${search}`,
     );
     return {
       data: response.data.data,

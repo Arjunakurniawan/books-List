@@ -4,7 +4,13 @@ import clsx from "clsx";
 import { ArrowLeft, CircleCheckBig, CircleAlert } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -20,22 +26,32 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import AppBreadcrumb from "@/components/common/AppBreadcrumb";
 import { useCreateBooks } from "@/hooks/books/useBooks";
 import { useCategories } from "@/hooks/categories/useCategories";
+import { Controller, useForm, type SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  FormBookSchema,
+  type FormBookInput,
+  type FormBookOutput,
+} from "@/lib/validation";
 
 export default function AddBookScreen() {
   const isMobile = useIsMobile();
   const { state } = useSidebar();
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    image: "",
-    price: 0,
-    stock: 0,
-    categoryId: "",
+  const form = useForm<FormBookInput, any, FormBookOutput>({
+    resolver: zodResolver(FormBookSchema),
+    values: {
+      name: "",
+      description: "",
+      image: "",
+      price: 0,
+      stock: 0,
+      categoryId: "",
+    },
   });
 
   const [status, setStatus] = useState<{
@@ -43,7 +59,7 @@ export default function AddBookScreen() {
     msg: string;
   }>({ type: null, msg: "" });
 
-  const { data } = useCategories();
+  const { data: categories } = useCategories();
   const createMutation = useCreateBooks();
   const navigate = useNavigate();
 
@@ -52,26 +68,15 @@ export default function AddBookScreen() {
     setTimeout(() => setStatus({ type: null, msg: "" }), 3000);
   };
 
-  const handleButtonSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    createMutation.mutate(
-      {
-        name: formData.name,
-        description: formData.description,
-        image: formData.image,
-        price: formData.price,
-        stock: formData.stock,
-        categoryId: formData.categoryId,
+  const onSubmit: SubmitHandler<FormBookOutput> = (data) => {
+    createMutation.mutate(data, {
+      onSuccess: () => {
+        showAlert("Success", "Book created successfully");
+        form.reset();
+        setTimeout(() => navigate("/books"), 1500);
       },
-      {
-        onSuccess: () => {
-          (showAlert("Success", "Book created successfully"),
-            navigate("/books"));
-        },
-        onError: () => showAlert("Error", "Error created books"),
-      },
-    );
+      onError: () => showAlert("Error", "Error creating book"),
+    });
   };
 
   return (
@@ -116,125 +121,191 @@ export default function AddBookScreen() {
 
       {/* Add Book Form */}
       <div className="w-[90%] ml-5 lg:ml-10 mt-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 lg:w-[50%]">
-        <form>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FieldGroup>
             <FieldSet>
               <FieldGroup>
-                <Field>
-                  <FieldLabel htmlFor="name">Book Name</FieldLabel>
-                  <Input
-                    type="text"
-                    placeholder="add book name..."
-                    className=" dark:border-neutral-800 "
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                  />
-                </Field>
-                <Field>
-                  <FieldLabel htmlFor="description">Description</FieldLabel>
-                  <Textarea
-                    placeholder="add book description..."
-                    className="dark:border-neutral-800"
-                    area-invalid
-                    value={formData.description}
-                    onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
-                    }
-                  />
-                </Field>
+                <Controller
+                  name="name"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="input-name">Name</FieldLabel>
+                      <Input
+                        type="text"
+                        placeholder="add book name..."
+                        className={clsx("dark:border-neutral-800", {
+                          "border-destructive transition-all":
+                            fieldState.invalid,
+                        })}
+                        {...field}
+                        aria-invalid={fieldState.invalid}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="description"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="description">Description</FieldLabel>
+                      <Textarea
+                        placeholder="add book description..."
+                        className={clsx("dark:border-neutral-800", {
+                          "border-destructive transition-all":
+                            fieldState.invalid,
+                        })}
+                        {...field}
+                        aria-invalid={fieldState.invalid}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
               </FieldGroup>
             </FieldSet>
 
             {/* image url */}
             <FieldSet>
-              <Field>
-                <FieldLabel htmlFor="imageUrl">Image URL</FieldLabel>
-                <InputGroup className="dark:border-neutral-800 outline-none dark:bg-black">
-                  <InputGroupInput
-                    type="text"
-                    value={formData.image}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        image: e.target.value,
-                      })
-                    }
-                  />
-                  <InputGroupAddon>url</InputGroupAddon>
-                </InputGroup>
-              </Field>
+              <Controller
+                name="image"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="imageUrl">Image URL</FieldLabel>
+                    <InputGroup
+                      className={clsx(
+                        "dark:border-neutral-800 outline-none dark:bg-black",
+                        {
+                          "border-destructive transition-all ":
+                            fieldState.invalid,
+                        },
+                      )}
+                    >
+                      <InputGroupInput
+                        type="text"
+                        {...field}
+                        placeholder="..."
+                      />
+                      <InputGroupAddon>url</InputGroupAddon>
+                    </InputGroup>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
             </FieldSet>
 
             <FieldSet>
               <div className="grid grid-cols-2 space-x-1">
-                <Field>
-                  <FieldLabel>Stock</FieldLabel>
-                  <Input
-                    type="number"
-                    className="dark:border-neutral-800"
-                    value={formData.stock}
-                    onChange={(e) => {
-                      setFormData({
-                        ...formData,
-                        stock: Number(e.target.value),
-                      });
-                    }}
-                  />
-                </Field>
+                <Controller
+                  name="stock"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>Stock</FieldLabel>
+                      <Input
+                        type="number"
+                        placeholder="0"
+                        className={clsx("dark:border-neutral-800", {
+                          "border-destructive transition-all":
+                            fieldState.invalid,
+                        })}
+                        {...field}
+                        aria-invalid={fieldState.invalid}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
 
-                <Field>
-                  <FieldLabel>Category</FieldLabel>
-                  <Select
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, categoryId: value })
-                    }
-                  >
-                    <SelectTrigger className="dark:border-neutral-800">
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {data?.map((category) => (
-                        <SelectItem
-                          key={category.id}
-                          value={category.id as string}
+                <Controller
+                  name="categoryId"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>Category</FieldLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger
+                          className={clsx("dark:border-neutral-800", {
+                            "border-destructive transition-all":
+                              fieldState.invalid,
+                          })}
                         >
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </Field>
+                          <SelectValue placeholder="Select category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories?.map((category) => (
+                            <SelectItem
+                              key={category.id}
+                              value={category.id as string}
+                            >
+                              {category.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
               </div>
 
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="Price">Price</FieldLabel>
                   <InputGroup className="dark:border-neutral-800 outline-none dark:bg-black">
-                    <InputGroupInput
-                      type="number"
-                      placeholder="0"
-                      value={formData.price}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          price: Number(e.target.value),
-                        })
-                      }
+                    <Controller
+                      name="price"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <>
+                          <InputGroupInput
+                            type="number"
+                            placeholder="0"
+                            {...field}
+                            aria-invalid={fieldState.invalid}
+                          />
+                          <InputGroupAddon>IDR</InputGroupAddon>
+                        </>
+                      )}
                     />
-                    <InputGroupAddon>IDR</InputGroupAddon>
                   </InputGroup>
+                  <Controller
+                    name="price"
+                    control={form.control}
+                    render={({ fieldState }) =>
+                      fieldState.invalid ? (
+                        <FieldError errors={[fieldState.error]} />
+                      ) : (
+                        <></>
+                      )
+                    }
+                  />
                 </Field>
               </FieldGroup>
             </FieldSet>
             <Field orientation="horizontal">
               <Button
                 type="submit"
-                onClick={handleButtonSubmit}
-                variant={"primary"}
+                variant={"default"}
+                disabled={createMutation.isPending}
               >
-                Submit
+                {createMutation.isPending ? "Submitting..." : "Submit"}
               </Button>
             </Field>
           </FieldGroup>

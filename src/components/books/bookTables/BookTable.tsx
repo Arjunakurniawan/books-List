@@ -1,10 +1,9 @@
 import { DataTable } from "@/components/books/bookTables/BookDataTable";
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import { Plus, Search } from "lucide-react";
 import { Link } from "react-router-dom";
-import { createColumns } from "./bookColumns";
+import { createColumns } from "./bookCreateColumns";
 import {
   InputGroup,
   InputGroupAddon,
@@ -20,6 +19,7 @@ export default function BookTable() {
   const { isLoading, data, isPlaceholderData } = useBooks(
     currentPage,
     pageSize,
+    searchItem,
   );
 
   const deleteMutation = useDeleteBooks();
@@ -29,11 +29,6 @@ export default function BookTable() {
       deleteMutation.mutate(id);
     }
   };
-
-  const filteredBooks =
-    data?.data?.filter((book) =>
-      book.name.toLowerCase().includes(searchItem.toLowerCase()),
-    ) || [];
 
   const columns = createColumns(handleDelete);
 
@@ -64,7 +59,7 @@ export default function BookTable() {
       </div>
       <DataTable
         columns={columns}
-        data={filteredBooks}
+        data={data?.data || []}
         currentPage={currentPage}
         total={data?.total || 0}
         pageSize={pageSize}

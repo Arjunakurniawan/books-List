@@ -1,4 +1,4 @@
-import CategoryTable from "@/components/categories/CategoryTables/CategoryPage";
+import CategoryTable from "@/components/categories/CategoryTables/CategoryTable";
 import AppBreadcrumb from "@/components/common/AppBreadcrumb";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";

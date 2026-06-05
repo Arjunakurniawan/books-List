@@ -57,7 +57,7 @@ function Sidebar() {
           size="icon"
           variant="expandedBtn"
           onClick={toggleSidebar}
-          className="absolute top-4 -right-6 w-10 h-10 shadow-md dark:text-white"
+          className="absolute top-4 -right-6 w-10 h-10 shadow-md"
         >
           {state === "expanded" ? <BiArrowBack /> : <BiArrowFromLeft />}
         </Button>

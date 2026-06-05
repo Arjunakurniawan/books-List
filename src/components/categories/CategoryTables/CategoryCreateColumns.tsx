@@ -35,6 +35,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { CategorySchema } from "@/lib/validation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export const createColumns = (
   showAlert: (type: "Success" | "Error", msg: string) => void,
@@ -70,7 +73,10 @@ export const createColumns = (
     header: "Actions",
     cell: ({ row }) => {
       const [dialogOpen, setDialogOpen] = useState(false);
-      const [categoryName, setCategoryName] = useState(row.original.name);
+      const formCategory = useForm<{ name: string }, any, { name: string }>({
+        resolver: zodResolver(CategorySchema),
+        values: { name: row.original.name },
+      });
 
       const updateMutation = useUpdateCategories();
       const deleteMutation = useDeleteCategories();
@@ -87,13 +93,11 @@ export const createColumns = (
       };
 
       const handleSubmit = async () => {
-        if (!categoryName.trim()) {
-          showAlert("Error", "Category name is required");
-          return;
-        }
-
         updateMutation.mutate(
-          { id: row.original.id as string, data: { name: categoryName } },
+          {
+            id: row.original.id as string,
+            data: { name: formCategory.getValues().name.trim() },
+          },
           {
             onSuccess: () => {
               if (onrefresh) {
@@ -111,7 +115,7 @@ export const createColumns = (
 
       return (
         <>
-1`12`          <div className="flex gap-2">
+          <div className="flex gap-2">
             <Button
               variant="outline"
               className="flex items-center gap-1 text-black dark:text-white px-2 py-1 rounded p-3 h-10"
@@ -172,8 +176,7 @@ export const createColumns = (
                     <Input
                       id="category-name"
                       placeholder="Enter category name"
-                      value={categoryName}
-                      onChange={(e) => setCategoryName(e.target.value)}
+                      {...formCategory.register("name")}
                       className="col-span-4 border border-neutral-800 outline-none dark:focus-visible:border-blue-800"
                       disabled={updateMutation.isPending}
                       onKeyDown={(e) => {

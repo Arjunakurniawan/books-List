@@ -79,7 +79,7 @@ export function DataTable<TData, TValue>({
 
   if (isMobile) {
     return (
-      <div className="rounded-md border ">
+      <div className="rounded-md border">
         {/* table */}
         <ScrollArea className="w-full rounded-md">
           <Table>

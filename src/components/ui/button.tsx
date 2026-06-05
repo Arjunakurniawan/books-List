@@ -14,17 +14,17 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
-          "border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        expandedBtn: "bg-white hover:bg-neutral-200 text-black dark:border dark:border-neutral-700 dark:bg-black dark:hover:bg-neutral-700/90 transition-all",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline bg-neutral-900",
-        primary: "bg-blue-500 text-white hover:bg-blue-600",
-        topbar: "bg-transparent hover:bg-neutral-200/50",
-        btnLogin: "border border-neutral-800 hover:bg-neutral-800/90 dark:text-accent-foreground text-white bg-neutral-800 dark:bg-foreground dark:text-black dark:hover:bg-foreground/90 w-full ",
-        btnRegister: "border border-neutral-800 bg-black shadow-sm hover:bg-neutral-900/60 hover:text-accent-foreground transition-all",
-        btnOutlineCustom: "border border-neutral-800 bg-transparent shadow-sm hover:bg-neutral-200/90 hover:text-accent-foreground transition-all",
+        link: "text-primary underline-offset-4 hover:underline",
+        btnLogin:
+          "bg-black text-white hover:bg-neutral-800 w-full justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors dark:bg-white dark:text-black dark:hover:bg-neutral-200",
+        btnOutlineCustom:
+          "border border-neutral-800 text-neutral-800 hover:bg-neutral-800 hover:text-white w-full justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-200 dark:hover:text-black",
+        expandedBtn:
+          "bg-neutral-50 text-black hover:bg-neutral-200 w-full justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors dark:hover:bg-neutral-200",
       },
       size: {
         default: "h-9 px-4 py-2",

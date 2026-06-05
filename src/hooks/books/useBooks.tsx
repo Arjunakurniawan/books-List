@@ -13,10 +13,14 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-export const useBooks = (page: number = 1, pageSize: number) => {
+export const useBooks = (
+  page: number = 1,
+  pageSize: number,
+  search?: string,
+) => {
   return useQuery({
-    queryKey: ["books", page, pageSize],
-    queryFn: () => getBooks(page, pageSize),
+    queryKey: ["books", page, pageSize, search],
+    queryFn: () => getBooks(page, pageSize, search),
     placeholderData: keepPreviousData,
     staleTime: 5000,
   });
