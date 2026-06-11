@@ -219,6 +219,7 @@ export default function AddBookScreen() {
                             fieldState.invalid,
                         })}
                         {...field}
+                        value={field.value as string | number}
                         aria-invalid={fieldState.invalid}
                       />
                       {fieldState.invalid && (
@@ -277,8 +278,9 @@ export default function AddBookScreen() {
                           <InputGroupInput
                             type="number"
                             placeholder="0"
-                            {...field}
                             aria-invalid={fieldState.invalid}
+                            {...field}
+                            value={field.value as string | number}
                           />
                           <InputGroupAddon>IDR</InputGroupAddon>
                         </>

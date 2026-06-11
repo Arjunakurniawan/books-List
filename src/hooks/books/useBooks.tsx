@@ -16,7 +16,7 @@ import {
 export const useBooks = (
   page: number = 1,
   pageSize: number,
-  search?: string,
+  search: string | null,
 ) => {
   return useQuery({
     queryKey: ["books", page, pageSize, search],

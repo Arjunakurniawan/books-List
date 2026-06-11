@@ -19,6 +19,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   useCategories,
   useCreateCategories,
+  useDeleteCategories,
 } from "@/hooks/categories/useCategories";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CategorySchema } from "@/lib/validation";
@@ -37,7 +38,8 @@ export default function CategoryTable() {
     type: "Success" | "Error" | null;
     msg: string;
   }>({ type: null, msg: "" });
-  const { data } = useCategories();
+
+  const { data } = useCategories(searchItem);
   const createMutation = useCreateCategories();
 
   const showAlert = (type: "Success" | "Error", msg: string) => {
@@ -59,6 +61,7 @@ export default function CategoryTable() {
     );
   };
 
+
   const handleOpenChange = (open: boolean) => {
     setDialogOpen(open);
     if (!open) {
@@ -66,12 +69,6 @@ export default function CategoryTable() {
       setStatus({ type: null, msg: "" });
     }
   };
-
-  const filteredCategories = Array.isArray(data)
-    ? data.filter((cat) =>
-        cat.name.toLowerCase().includes(searchItem.toLowerCase()),
-      )
-    : [];
 
   const columns = createColumns(showAlert);
 
@@ -181,7 +178,7 @@ export default function CategoryTable() {
           onChange={(e) => setSearchItem(e.target.value)}
         />
       </div>
-      <DataTable columns={columns} data={filteredCategories} />
+      <DataTable columns={columns} data={data?.data || []} />
     </div>
   );
 }

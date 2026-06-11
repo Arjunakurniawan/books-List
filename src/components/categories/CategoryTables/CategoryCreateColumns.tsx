@@ -79,12 +79,14 @@ export const createColumns = (
       });
 
       const updateMutation = useUpdateCategories();
+
       const deleteMutation = useDeleteCategories();
 
-      const handleDelete = async () => {
-        deleteMutation.mutate(row.original.id as string, {
+      const handleDelete = async (id: string) => {
+        deleteMutation.mutate(id, {
           onSuccess: () => {
             showAlert("Success", "Category deleted successfully");
+            setTimeout(() => setDialogOpen(false), 500);
           },
           onError: () => {
             showAlert("Error", "Error deleting category");
@@ -100,9 +102,6 @@ export const createColumns = (
           },
           {
             onSuccess: () => {
-              if (onrefresh) {
-                onrefresh();
-              }
               showAlert("Success", "Category edited successfully");
               setTimeout(() => setDialogOpen(false), 500);
             },
@@ -152,8 +151,12 @@ export const createColumns = (
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
-                    onClick={handleDelete}
+                    onClick={() => handleDelete(row.original.id as string)}
                     className="bg-red-600 hover:bg-red-700 text-white"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter")
+                        handleDelete(row.original.id as string);
+                    }}
                   >
                     {deleteMutation.isPending ? "Deleting..." : "Delete"}
                   </AlertDialogAction>
@@ -161,6 +164,7 @@ export const createColumns = (
               </AlertDialogContent>
             </AlertDialog>
           </div>
+
           <div className="flex gap-96 relative">
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogContent className="sm:max-w-[425px] dark:bg-neutral-950 border dark:border-neutral-800">

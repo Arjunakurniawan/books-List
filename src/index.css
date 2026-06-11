@@ -7,7 +7,7 @@
 @layer base {
   :root {
     --font-sans: "Poppins";
-    --background: 210 16.93% 99%;
+    --background: 0 0% 100%;
     --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
@@ -76,8 +76,7 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
-
-@layer base {
+layer base {
   * {
     @apply border-border;
   }

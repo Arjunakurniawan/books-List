@@ -32,7 +32,7 @@ function LoginScreen() {
   };
 
   return (
-    <div className="relative h-screen font-sans antialiased flex items-center justify-center p-6">
+    <div className="relative h-screen bg-background font-sans antialiased flex items-center justify-center p-6">
       <div className="flex items-center">
         <div className="absolute top-5 right-5">
           <ModeToggle />

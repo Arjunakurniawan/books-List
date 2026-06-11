@@ -45,7 +45,7 @@ export const createColumns = (
     cell({ row }) {
       const description = row.getValue("description") as string;
       const isMobile = useIsMobile();
-      
+
       return (
         <span>
           {isMobile && description.length > 30
@@ -97,10 +97,10 @@ export const createColumns = (
     accessorKey: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      const handleDelete = async () => {
+      const handleDelete = () => {
         try {
           if (onDelete) {
-            await onDelete(row.original.id as string);
+            onDelete(row.original.id as string);
           }
         } catch (error) {
           console.error("Error deleting book:", error);

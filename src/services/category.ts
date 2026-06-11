@@ -1,12 +1,19 @@
 import type { ApiResponse, CategoryResponse } from "@/types/ApiResponse.type";
 import api from "./api/api";
 
-export const getCategories = async () => {
+export const getCategories = async (searchQuery: string | null) => {
   try {
-    const response =
-      await api.get<ApiResponse<CategoryResponse[]>>("/categories");
-    console.log("Fetched categories:", response.data);
-    return response.data.data;
+    const response = await api.get<ApiResponse<CategoryResponse[]>>(
+      `/categories`,
+      {
+        params: {
+          search: searchQuery,
+        },
+      },
+    );
+    return {
+      data: response.data.data,
+    };
   } catch (error) {
     console.error("Error fetching categories:", error);
     throw error;
@@ -20,7 +27,6 @@ export const createCategory = async (categoryData: CategoryResponse) => {
       "/category/create",
       categoryData,
     );
-    console.log("Created category:", response.data);
     return response.data.data;
   } catch (error) {
     console.error("Error creating category:", error);
@@ -33,7 +39,6 @@ export const deleteCategory = async (categoryId: string) => {
     const response = await api.delete<ApiResponse<CategoryResponse>>(
       `/category/${categoryId}`,
     );
-    console.log("success:", response.data);
     return response.data.data;
   } catch (error) {
     console.error("Response:", error);
@@ -50,7 +55,6 @@ export const editCategory = async (
       `/category/${categoryId}`,
       categoryData,
     );
-    console.log("success", response.data);
     return response.data.data;
   } catch (error) {
     console.error("Response:", error);

@@ -6,10 +6,10 @@ import {
 } from "@/services/category";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const useCategories = () => {
+export const useCategories = (searchQuery: string | null) => {
   return useQuery({
-    queryKey: ["categories"],
-    queryFn: getCategories,
+    queryKey: ["categories", searchQuery],
+    queryFn: () => getCategories(searchQuery),
     staleTime: 5000,
   });
 };
@@ -37,7 +37,6 @@ export const useUpdateCategories = () => {
 
 export const useDeleteCategories = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (id: string) => deleteCategory(id),
     onSuccess: () => {
