@@ -16,19 +16,21 @@ function Dashboard() {
     <>
       <div
         className={clsx(
-          "h-screen transition-all duration-300 mt-5",
-          isMobile ? "m-0" : state === "expanded" ? "ml-60" : "ml-28"
+          "min-h-screen transition-all duration-300 mt-5",
+          isMobile ? "m-0" : state === "expanded" ? "ml-60" : "ml-28",
         )}
       >
-      <div className="pt-4 px-6 pb-8 ml-5">
-          <h1 className="text-4xl">Dashboard.</h1>
-          <AppBreadcrumb to="/dashboard">Dashboard</AppBreadcrumb>
+        <div className="px-10 ml-2">
+          <div className="pb-5">
+            <h1 className="text-4xl">Dashboard.</h1>
+            <AppBreadcrumb to="/dashboard">Dashboard</AppBreadcrumb>
+          </div>
           <div className="space-y-8">
             <div>
               <DashboardCards />
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+            <div className="grid grid-cols-12 gap-6">
               <div className="md:col-span-8">
                 <ChartBar />
               </div>

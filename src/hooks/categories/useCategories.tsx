@@ -6,10 +6,10 @@ import {
 } from "@/services/category";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const useCategories = (searchQuery: string | null) => {
+export const useCategories = (searchQuery?: string | null) => {
   return useQuery({
     queryKey: ["categories", searchQuery],
-    queryFn: () => getCategories(searchQuery),
+    queryFn: () => getCategories(searchQuery || null),
     staleTime: 5000,
   });
 };

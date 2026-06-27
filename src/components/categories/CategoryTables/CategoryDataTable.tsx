@@ -37,7 +37,7 @@ export function DataTable<TData, TValue>({
 
   if (isMobile) {
     return (
-      <div className="rounded-md border overflow-x-auto ">
+      <div className="rounded-md border w-[20rem] overflow-x-auto ">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -93,7 +93,7 @@ export function DataTable<TData, TValue>({
     );
   }
   return (
-    <div className="rounded-md border w-[37%] overflow-x-auto">
+    <div className="rounded-md border lg:w-full overflow-x-auto">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

@@ -5,44 +5,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-import { getBooks } from "@/services/book";
-import { getCategories } from "@/services/category";
+import { useBooks } from "@/hooks/books/useBooks";
+import { useCategories } from "@/hooks/categories/useCategories";
 
 import { BookIcon, Tag, TrendingUp } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function DashboardCards() {
-  const [booksCount, setBooksCount] = useState(0);
-  const [categoriesCount, setCategoriesCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [booksResponse, categoriesResponse] = await Promise.all([
-          getBooks(),
-          getCategories(),
-        ]);
-        setBooksCount(booksResponse.total);
-        setCategoriesCount(categoriesResponse.length);
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const { data: categoriesCount, isLoading: loadingCountCategories } =
+    useCategories();
+  const { data: booksCount, isLoading: loadingCountBooks } = useBooks();
 
   const dashboardCards = [
     {
       icon: Tag,
       label: "Categories",
-      value: loading ? "..." : categoriesCount.toLocaleString(),
+      value: loadingCountCategories ? "..." : categoriesCount?.total || 0,
       change: "+2.15%",
       trend: "up",
       path: "/categories",
@@ -50,7 +28,7 @@ export default function DashboardCards() {
     {
       icon: BookIcon,
       label: "Books",
-      value: loading ? "..." : booksCount.toLocaleString(),
+      value: loadingCountBooks ? "..." : booksCount?.total || 0,
       change: "+5.23%",
       trend: "up",
       path: "/books",

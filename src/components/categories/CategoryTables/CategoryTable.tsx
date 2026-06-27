@@ -19,7 +19,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   useCategories,
   useCreateCategories,
-  useDeleteCategories,
 } from "@/hooks/categories/useCategories";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CategorySchema } from "@/lib/validation";
@@ -60,7 +59,6 @@ export default function CategoryTable() {
       },
     );
   };
-
 
   const handleOpenChange = (open: boolean) => {
     setDialogOpen(open);

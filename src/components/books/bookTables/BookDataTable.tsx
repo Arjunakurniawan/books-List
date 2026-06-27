@@ -81,7 +81,7 @@ export function DataTable<TData, TValue>({
     return (
       <div className="rounded-md border">
         {/* table */}
-        <ScrollArea className="w-full rounded-md">
+        <ScrollArea className="rounded-md overflow-x-auto">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -181,7 +181,7 @@ export function DataTable<TData, TValue>({
   }
 
   return (
-    <div className="rounded-md w-full border">
+    <div className="rounded-md w-[37%] lg:w-full border overflow-x-auto">
       {/* table */}
       <Table>
         <TableHeader>

@@ -13,6 +13,7 @@ export const getCategories = async (searchQuery: string | null) => {
     );
     return {
       data: response.data.data,
+      total: response.data.total
     };
   } catch (error) {
     console.error("Error fetching categories:", error);

@@ -18,7 +18,7 @@ const MainLayout = () => {
             <div className="flex flex-col flex-1">
               <TopBar />
               <MobileNav />
-              <main className="pt-16 w-screen mb-5 overflow-auto">
+              <main className="pt-16 w-full max-w-full overflow-x-hidden mb-5 ">
                 <Outlet />
               </main>
             </div>

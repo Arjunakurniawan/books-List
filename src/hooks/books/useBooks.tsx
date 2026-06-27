@@ -15,12 +15,12 @@ import {
 
 export const useBooks = (
   page: number = 1,
-  pageSize: number,
-  search: string | null,
+  pageSize?: number,
+  search?: string | null,
 ) => {
   return useQuery({
-    queryKey: ["books", page, pageSize, search],
-    queryFn: () => getBooks(page, pageSize, search),
+    queryKey: ["books", page, pageSize, search || null],
+    queryFn: () => getBooks(page, pageSize, search || null),
     placeholderData: keepPreviousData,
     staleTime: 5000,
   });

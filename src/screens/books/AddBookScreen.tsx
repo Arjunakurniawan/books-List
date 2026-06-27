@@ -248,14 +248,16 @@ export default function AddBookScreen() {
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
-                          {categories?.map((category) => (
+                          {categories?.data?.map((category) => 
+                          (
                             <SelectItem
                               key={category.id}
                               value={category.id as string}
                             >
                               {category.name}
                             </SelectItem>
-                          ))}
+                          ))
+                          }
                         </SelectContent>
                       </Select>
                       {fieldState.invalid && (

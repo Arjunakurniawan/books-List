@@ -253,7 +253,7 @@ export default function EditBookScreen() {
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
-                          {categories?.map((cat) => (
+                          {categories?.data?.map((cat) => (
                             <SelectItem key={cat.id} value={cat.id as string}>
                               {cat.name}
                             </SelectItem>

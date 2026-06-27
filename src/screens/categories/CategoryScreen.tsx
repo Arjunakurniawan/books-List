@@ -12,7 +12,7 @@ function CategoryScreen() {
     <>
       <div
         className={clsx(
-          "h-screen transition-all duration-300 lg:mt-5 mt-10",
+          "min-h-screen transition-all duration-300 lg:mt-5 mt-10",
           isMobile ? "m-0" : state === "expanded" ? "ml-60" : "ml-28",
         )}
       >
