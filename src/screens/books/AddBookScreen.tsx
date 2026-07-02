@@ -120,7 +120,7 @@ export default function AddBookScreen() {
       </div>
 
       {/* Add Book Form */}
-      <div className="w-[90%] ml-5 lg:ml-10 mt-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 lg:w-[50%]">
+      <div className="w-[90%] ml-5 lg:ml-10 mt-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 lg:w-[45rem]">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FieldGroup>
             <FieldSet>

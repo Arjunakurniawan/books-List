@@ -79,7 +79,7 @@ export function DataTable<TData, TValue>({
 
   if (isMobile) {
     return (
-      <div className="rounded-md border">
+      <div className="rounded-md border w-[21.5rem]">
         {/* table */}
         <ScrollArea className="rounded-md overflow-x-auto">
           <Table>
@@ -181,7 +181,7 @@ export function DataTable<TData, TValue>({
   }
 
   return (
-    <div className="rounded-md w-[37%] lg:w-full border overflow-x-auto">
+    <div className="rounded-md lg:w-full border overflow-x-auto">
       {/* table */}
       <Table>
         <TableHeader>

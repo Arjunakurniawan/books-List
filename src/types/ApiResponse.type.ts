@@ -32,8 +32,8 @@ export type UpdateBook = {
     price: number;
     stock: number;
     categoryId: string;
-  }
-}
+  };
+};
 
 export type CategoryResponse = {
   id?: string;
@@ -81,4 +81,4 @@ export type LoginResponse = ApiResponse<UserResponse>;
 
 export type RegisterResponse = ApiResponse<UserResponse>;
 
-export type LogoutResponse = ApiResponse<null>
+export type LogoutResponse = ApiResponse<null>;

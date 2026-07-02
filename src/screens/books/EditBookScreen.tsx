@@ -47,7 +47,7 @@ export default function EditBookScreen() {
 
   const updateMutation = useEditBooks();
   const { data: categories } = useCategories();
-  const { data: bookData, isLoading, isError } = useBookById(id as string);
+  const { data: bookData, isError } = useBookById(id as string);
 
   const form = useForm<FormBookUpdateInput, any, FormBookUpdateOutput>({
     resolver: zodResolver(FormBookUpdateSchema),
@@ -86,9 +86,9 @@ export default function EditBookScreen() {
     );
   };
 
-  if (isLoading) return <div className="text-center mt-10">Loading...</div>;
-  if (isError)
+  if (isError) {
     return <div className="text-center mt-10">Failed Get data Book!</div>;
+  }
 
   return (
     <div
@@ -107,6 +107,7 @@ export default function EditBookScreen() {
           <AlertDescription>{status.msg}</AlertDescription>
         </Alert>
       )}
+
       {/* Error Alert */}
       {status.type === "Error" && (
         <Alert
@@ -130,7 +131,7 @@ export default function EditBookScreen() {
       </div>
 
       {/* Edit Book Form */}
-      <div className="w-[90%] ml-5 lg:ml-10 mt-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 lg:w-[50%]">
+      <div className="w-[90%] ml-5 lg:ml-10 mt-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 lg:w-[45rem]">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FieldGroup>
             <FieldSet>
@@ -226,6 +227,7 @@ export default function EditBookScreen() {
                             fieldState.invalid,
                         })}
                         {...field}
+                        value={field.value as string}
                       />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
@@ -282,6 +284,7 @@ export default function EditBookScreen() {
                             placeholder="0"
                             {...field}
                             aria-invalid={fieldState.invalid}
+                            value={field.value as string}
                           />
                           <InputGroupAddon>IDR</InputGroupAddon>
                         </>
